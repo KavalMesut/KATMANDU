@@ -1,0 +1,137 @@
+{
+  "title": "KATMANDU",
+  "sections": [
+    {
+      "id": "overview",
+      "en": {
+        "title": "Scientific problem solving and derivation",
+        "body": "KATMANDU is an AI-assisted workspace for university-level physics and mathematics. It presents solutions as readable academic documents with equations, diagrams and interactive derivations. You can explore a step, ask a contextual question, compare alternative methods and save the complete study locally.\n\nBuilt with React, TypeScript, Vite, Tailwind CSS and KaTeX."
+      },
+      "tr": {
+        "title": "Bilimsel çözüm ve türetim",
+        "body": "KATMANDU, üniversite düzeyinde fizik ve matematik için yapay zekâ destekli bir çalışma ortamıdır. Çözümleri denklemler, şemalar ve etkileşimli türetimlerle akademik belge olarak sunar. Bir adımı derinleştirebilir, bağlamsal soru sorabilir, alternatif yöntemleri karşılaştırabilir ve tüm çalışmayı yerel olarak saklayabilirsiniz.\n\nReact, TypeScript, Vite, Tailwind CSS ve KaTeX ile geliştirilmiştir."
+      }
+    },
+    {
+      "id": "preview",
+      "en": {
+        "title": "Preview",
+        "body": "Black workspace with a rainbow accent palette, inline mathematical derivations and a branching solution tree. The preview uses English offline demo examples, including the problem statement, solution and derivation labels.\n\n![KATMANDU dark theme with rainbow accents, an English pendulum demo and its derivation tree](docs/screenshots/dark-spectrum.jpg)"
+      },
+      "tr": {
+        "title": "Önizleme",
+        "body": "Siyah çalışma alanı, gökkuşağı vurgu paleti, yerinde matematiksel türetimler ve dallanan çözüm ağacı. Önizlemede soru metni, çözüm ve türetim başlıkları dahil İngilizce çevrimdışı demo örnekleri kullanılır.\n\n![Gökkuşağı vurgulu KATMANDU koyu teması, İngilizce sarkaç demosu ve türetim ağacı](docs/screenshots/dark-spectrum.jpg)"
+      }
+    },
+    {
+      "id": "features",
+      "en": {
+        "title": "Features",
+        "body": "- Enter text or LaTeX, upload images, or load PDF documents.\n- Detect independent questions and solve them in separate tabs; preserve dependent parts such as a), b), c).\n- Explore inline derivation layers, diagrams, assumptions, foundational laws and alternative methods.\n- Choose the provider and model yourself; questions are detected automatically without an automatic model router.\n- Browse live model catalogs for OpenAI, Google Gemini, DeepSeek and OpenRouter. OpenRouter groups models by company.\n- Save studies as readable JSON files with their sources, attachments, derivation trees and execution reports.\n- Export individual or combined studies as A4 print/PDF documents or standalone LaTeX source.\n- Use English (default) or Turkish without changing the layout."
+      },
+      "tr": {
+        "title": "Özellikler",
+        "body": "- Metin veya LaTeX girin, görsel ya da PDF yükleyin.\n- Bağımsız soruları tespit edip ayrı sekmelerde çözün; a), b), c) gibi bağlı alt maddeleri koruyun.\n- Yerinde türetim katmanlarını, şemaları, varsayımları, kurucu yasaları ve alternatif yöntemleri inceleyin.\n- Sağlayıcıyı ve modeli kendiniz seçin; sorular otomatik algılanır, otomatik model yönlendiricisi çalışmaz.\n- OpenAI, Google Gemini, DeepSeek ve OpenRouter için güncel model kataloglarını kullanın. OpenRouter modelleri şirketlere göre gruplar.\n- Çalışmaları kaynakları, ekleri, türetim ağaçları ve işlem raporlarıyla okunabilir JSON dosyalarına kaydedin.\n- Tekli veya birleşik çalışmaları A4 baskı/PDF veya bağımsız LaTeX kaynağı olarak dışa aktarın.\n- Düzeni değiştirmeden İngilizce (varsayılan) veya Türkçe kullanın."
+      }
+    },
+    {
+      "id": "start",
+      "en": {
+        "title": "Getting started",
+        "body": "Requirements: **Node.js 22.13 or newer** and npm.\n\n```bash\nnpm ci\nnpm run dev\n```\n\nOpen `http://127.0.0.1:5173` (or the address printed by Vite if that port is occupied).\n\n```bash\nnpm run build\nnpm run preview\n```\n\n`build` checks TypeScript, including the local archive server, and creates the production bundle. `preview` serves that bundle with the local JSON archive API. A purely static hosting service keeps archives in browser storage because it cannot write to your local filesystem."
+      },
+      "tr": {
+        "title": "Başlangıç",
+        "body": "Gereksinimler: **Node.js 22.13 veya üzeri** ve npm.\n\n```bash\nnpm ci\nnpm run dev\n```\n\n`http://127.0.0.1:5173` adresini açın (port doluysa Vite’ın yazdığı adresi kullanın).\n\n```bash\nnpm run build\nnpm run preview\n```\n\n`build`, yerel arşiv sunucusu dahil TypeScript kontrolünü yapar ve üretim paketini oluşturur. `preview`, bu paketi yerel JSON arşiv API’siyle sunar. Yalnızca statik dosya sunan bir barındırma hizmeti yerel dosya sisteminize yazamadığından arşivler tarayıcı deposunda tutulur."
+      }
+    },
+    {
+      "id": "launcher",
+      "en": {
+        "title": "Launch from the project folder",
+        "body": "- **Linux:** Run `./KATMANDU_BASLAT.sh` from the project folder (or use your file manager’s “Run in terminal” option). It installs missing dependencies and opens the browser when ready.\n- **Windows:** Double-click `KATMANDU_BASLAT.bat`.\n- **macOS:** Double-click `KATMANDU_BASLAT.command` in Finder, or run `bash KATMANDU_BASLAT.command` in Terminal. If the executable permission was lost when downloading a ZIP, run `chmod +x KATMANDU_BASLAT.command` first.\n\nThe Linux launcher prints the current Git branch without changing it, uses `127.0.0.1:5173`, and refuses to silently switch ports. Launching it again while it is running opens the existing address. Stop it with `Ctrl+C` in its terminal. An existing local `KATMANDU.desktop` shortcut can still be used; it contains a machine-specific path and is excluded from Git.\n\nAll launchers require Node.js 22.13 or newer and keep the server on `127.0.0.1:5173`. The macOS launcher uses Vite to open the browser and does not require Linux-specific tools."
+      },
+      "tr": {
+        "title": "Proje klasöründen başlatma",
+        "body": "- **Linux:** Proje klasöründe `./KATMANDU_BASLAT.sh` komutunu çalıştırın (veya dosya yöneticisinin “Terminalde çalıştır” seçeneğini kullanın). Eksik bağımlılıklar kurulur ve sunucu hazır olunca tarayıcı açılır.\n- **Windows:** `KATMANDU_BASLAT.bat` dosyasına çift tıklayın.\n- **macOS:** Finder’da `KATMANDU_BASLAT.command` dosyasına çift tıklayın veya Terminal’de `bash KATMANDU_BASLAT.command` çalıştırın. ZIP indirirken çalıştırma izni kaybolmuşsa önce `chmod +x KATMANDU_BASLAT.command` çalıştırın.\n\nLinux başlatıcısı dal değiştirmeden mevcut Git dalını gösterir, `127.0.0.1:5173` adresini kullanır ve sessizce başka porta geçmez. Çalışırken tekrar açılırsa mevcut adres tarayıcıda açılır. Terminalde `Ctrl+C` ile durdurulur. Mevcut yerel `KATMANDU.desktop` kısayolu kullanılmaya devam edilebilir; bilgisayara özel yol içerdiğinden Git dışında tutulur.\n\nTüm başlatıcılar Node.js 22.13 veya üzerini gerektirir; sunucuyu `127.0.0.1:5173` üzerinde tutar. macOS başlatıcısı tarayıcıyı Vite ile açar ve Linux’a özgü araçlar gerektirmez."
+      }
+    },
+    {
+      "id": "platforms",
+      "en": {
+        "title": "Platform and mobile browser support",
+        "body": "Designed for Windows, Linux and macOS; Linux is the platform currently tested. Windows and macOS launchers are provided, but native testing on those systems is still pending.\n\nBelow 1200 pixels, **Solution**, **My Library** and **Derivation Tree** open as separate workspace views. Touch-friendly controls, scrollable dialogs and equation derivation buttons support phone and tablet use. Print/PDF keeps the A4 layout. Browser viewport checks do not replace testing on physical iOS/Android devices.\n\nThere is no native Android/iOS installer. A phone needs access to an already running web instance; Node.js does not need to be installed on the phone. `127.0.0.1` on the phone refers to the phone itself. Network sharing remains opt-in and has no user authentication; see the privacy section before exposing the local server."
+      },
+      "tr": {
+        "title": "Platform ve mobil tarayıcı desteği",
+        "body": "Windows, Linux ve macOS için tasarlanmıştır; şu anda test edilen platform Linux’tur. Windows ve macOS başlatıcıları sağlanır; bu sistemlerde gerçek cihaz testleri henüz yapılmamıştır.\n\n1200 pikselden dar ekranlarda **Çözüm**, **Kütüphanem** ve **Dallanma Ağacı** ayrı çalışma alanı görünümleri olarak açılır. Dokunmaya uygun kontroller, kaydırılabilir pencereler ve denklem türetim düğmeleri telefon/tablet kullanımını destekler. Baskı/PDF, A4 düzenini korur. Tarayıcı ekran boyutu kontrolleri fiziksel iOS/Android cihaz testlerinin yerini tutmaz.\n\nAndroid/iOS için yerel kurulum paketi yoktur. Telefonun çalışan bir web uygulamasına erişmesi gerekir; telefona Node.js kurulması gerekmez. Telefondaki `127.0.0.1`, telefonun kendisini gösterir. Ağ paylaşımı açıkça etkinleştirilir ve kullanıcı kimlik doğrulaması içermez; yerel sunucuyu dışarı açmadan önce gizlilik bölümünü okuyun."
+      }
+    },
+    {
+      "id": "language",
+      "en": {
+        "title": "Language",
+        "body": "English is the default on first launch. Choose **Settings → Language → Türkçe** for Turkish; the choice is saved immediately in this browser.\n\nInterface labels, messages, mathematical tooltips, prepared demo content and export headings follow the selected language. Live providers automatically interpret the input language and are instructed to write new solutions, question descriptions and derivations in the selected application language, regardless of the language of the question. Each request captures its language at the start, and new solution metadata records it. Saved solutions retain their original text and provenance; switching the interface language does not translate archived studies or user input."
+      },
+      "tr": {
+        "title": "Dil",
+        "body": "İlk açılışta İngilizce varsayılandır. Türkçe için **Ayarlar → Dil → Türkçe** seçin; tercih bu tarayıcıda hemen kaydedilir.\n\nArayüz etiketleri, mesajlar, matematiksel ipuçları, hazır demo içerikleri ve dışa aktarma başlıkları seçilen dili kullanır. Gerçek sağlayıcılar sorunun dilini otomatik algılar; sorunun dili ne olursa olsun yeni çözümleri, soru açıklamalarını ve türetimleri seçilen uygulama dilinde üretmeleri istenir. Her istek başladığı andaki dili korur; yeni çözümün kaynak bilgisine dil de kaydedilir. Kayıtlı çözümler özgün metinlerini ve kaynak bilgilerini korur; arayüz dilini değiştirmek eski çalışmaları veya kullanıcı girdilerini çevirmez."
+      }
+    },
+    {
+      "id": "providers",
+      "en": {
+        "title": "Providers and model selection",
+        "body": "Configure your provider, API key and model in **Settings**. Missing or whitespace-only keys block live operations with a visible message; they never enable demo mode automatically. Select **Offline Demo** explicitly to try prepared examples without API calls.\n\nModel lists refresh on application startup for providers with configured keys. They are cached locally for 24 hours and can be refreshed manually; you can also enter a model ID directly. Account availability, prices and supported input formats come from the provider catalog and may change. Use **Test Connection** to check your selection. OpenAI supports Chat Completions and Responses, with fallback to Responses when required by the endpoint.\n\n**Model selection is currently manual.** Choose the provider and model in Settings. Independent questions are still detected automatically and solved with your selected model. Automatic model recommendations are temporarily disabled because of routing problems; there is no recommendation-model call or approval dialog. The experimental routing code is retained for a later, corrected version."
+      },
+      "tr": {
+        "title": "Sağlayıcılar ve model seçimi",
+        "body": "Sağlayıcıyı, API anahtarını ve modeli **Ayarlar** bölümünden yapılandırın. Eksik veya yalnızca boşluklardan oluşan anahtarlar gerçek işlemleri görünür mesajla engeller; demo otomatik açılmaz. API çağrısı yapmadan hazır örnekleri denemek için **Çevrimdışı Demo** seçeneğini açıkça seçin.\n\nAnahtarı girilmiş sağlayıcıların model listeleri uygulama açılışında yenilenir. Listeler yerelde 24 saat önbelleğe alınır ve elle yenilenebilir; model kimliği doğrudan da girilebilir. Hesaba bağlı kullanılabilirlik, fiyat ve giriş biçimleri sağlayıcı kataloğundan gelir ve değişebilir. Seçiminizi **Bağlantıyı Sına** ile kontrol edin. OpenAI, Chat Completions ve Responses protokollerini destekler; uç nokta gerektirdiğinde Responses’a geçilir.\n\n**Model seçimi şu anda yalnızca elle yapılır.** Ayarlar’dan sağlayıcıyı ve modeli seçin. Bağımsız sorular otomatik algılanmaya devam eder ve seçtiğiniz modelle çözülür. Otomatik model önerisi yönlendirme sorunları nedeniyle geçici olarak devre dışıdır; öneri modeli çağrısı veya onay penceresi açılmaz. Deneysel yönlendirme kodu ileride düzeltilerek yeniden eklenmek üzere korunur."
+      }
+    },
+    {
+      "id": "archive",
+      "en": {
+        "title": "Local archive and execution reports",
+        "body": "With `npm run dev` or `npm run preview`, completed studies are saved as individual JSON files under **`solutions/`**. Existing browser records migrate on the first successful local-server connection. Browser storage remains an offline backup.\n\nOn the first archive operation after upgrading, JSON files in the old `cozumler/` folder move to `solutions/` without changing their contents or identifiers. Conflicting older files are preserved under `solutions/legacy-cozumler/`; the existing file in `solutions/` remains active. Backup files are not listed as duplicate studies.\n\nWrites, deletions and clearing are queued persistently when disk access fails and retried when connectivity returns, on reopening, or every 30 seconds. The archive panel shows pending work and errors. The queue belongs to the current browser profile. Records include `schemaVersion` and `updatedAt`; historical model/date information is preserved. The list loads summaries in pages of 50, then loads the full document when opened.\n\nA small **Execution report** below each derivation tree lists detection/solution models (and recommendation models in older reports), reasoning levels, elapsed processing time (excluding the user’s approval wait), tokens reported by the API and cost when available. Unknown token/cost data remains unknown. Shared calls are marked as shared, so reports for multiple questions must not be added together. This report is stored in `document.executionReport` in the question’s JSON file. Old studies do not receive estimated historical reports. The solution itself displays only the solution model and date."
+      },
+      "tr": {
+        "title": "Yerel arşiv ve işlem raporları",
+        "body": "`npm run dev` veya `npm run preview` ile tamamlanan çalışmalar **`solutions/`** altında ayrı JSON dosyalarına kaydedilir. Mevcut tarayıcı kayıtları yerel sunucuya ilk başarılı bağlantıda taşınır. Tarayıcı deposu çevrimdışı yedek olarak korunur.\n\nGüncellemeden sonraki ilk arşiv işleminde eski `cozumler/` klasöründeki JSON dosyaları içerikleri ve kimlikleri değiştirilmeden `solutions/` klasörüne taşınır. Çakışan eski dosyalar `solutions/legacy-cozumler/` altında korunur; `solutions/` içindeki mevcut dosya etkin kalır. Yedekler mükerrer çalışma olarak listelenmez.\n\nDisk erişimi başarısızsa kayıt, silme ve temizleme kalıcı kuyruğa alınır; bağlantı dönünce, uygulama yeniden açılınca veya 30 saniyede bir yeniden denenir. Arşiv paneli bekleyen işleri ve hataları gösterir. Kuyruk mevcut tarayıcı profiline bağlıdır. Kayıtlarda `schemaVersion` ve `updatedAt` bulunur; geçmiş model/tarih bilgileri korunur. Liste 50 kayıtlık özet sayfaları yükler; açıldığında tam doküman getirilir.\n\nHer türetim ağacının altındaki küçük **Çözüm raporu**, soru tespiti/çözüm modellerini (eski raporlarda öneri modellerini de), akıl yürütme seviyelerini, kullanıcı onayı beklemesi hariç işlem süresini, API’nin bildirdiği tokenları ve varsa ücreti gösterir. Bilinmeyen token/ücret verisi bilinmeyen olarak kalır. Ortak çağrılar paylaşılan olarak işaretlenir; çoklu soruların raporları toplanmamalıdır. Rapor, sorunun JSON dosyasında `document.executionReport` alanına kaydedilir. Eski çalışmalara tahmini geçmiş rapor eklenmez. Çözümün içinde yalnızca çözümü yapan model ve tarih görünür."
+      }
+    },
+    {
+      "id": "limits",
+      "en": {
+        "title": "Verification, request limits and privacy",
+        "body": "Verification explanations come from the solution model. KATMANDU does not currently run an independent symbolic algebra/CAS check; the interface and exports label these explanations **Not independently checked**. Missing explanations are not converted into claims of successful verification.\n\nClosing a tab, starting a replacement request or pressing **Stop** cancels the current operation and prevents a late response from replacing current work. Cancellation does not reverse charges for requests already processed by a provider.\n\nSettings include concurrency (default 2), timeout (default 300 seconds, including queue time) and an estimated per-question USD limit (0 disables it). When enabled, unknown catalog prices block requests and estimated input/output allowances are checked before calls. Shared detection costs are included when known. This is an application-side estimate, not a provider-enforced billing cap.\n\nOpenRouter renders and sends all pages of PDFs up to 20 pages; longer or unreadable documents fail explicitly. OpenAI sends actual PDF file bytes. A model or endpoint must support the supplied format.\n\nAPI calls go directly from the browser to the selected provider; API keys are kept in browser settings. Input and attachments are sent to that provider when used. `VITE_*` environment values are included in browser bundles. Production builds refuse populated `VITE_*_API_KEY`, token, password or secret variables; remove these values before building and enter keys in Settings. Gemini credentials are sent in the `x-goog-api-key` header rather than the URL. Browser storage is not an encrypted secret vault: scripts running on this application’s origin can read saved keys. A shared service using an owner’s key requires a separate authenticated backend. Local archives, environment files and private experiment/design folders are excluded from Git and blocked from direct development-server file access.\n\nDevelopment and preview servers listen on `127.0.0.1` by default. `KATMANDU_SHARE_NETWORK=1 npm run dev` explicitly enables network sharing, including archive access, without user authentication. The archive API rejects cross-site requests and requires the application header for mutations.\n\nProvider requests, catalog refreshes and connection tests require HTTPS; HTTP is allowed only for loopback proxies (`localhost`, `127.0.0.1`, `[::1]`). URLs containing a username/password and HTTP redirects are rejected. Custom endpoints receive your input and credentials: configure only endpoints you trust. The archive API also validates the Host header to block DNS rebinding; custom domain names must be explicitly listed in Vite’s `server.allowedHosts` or `preview.allowedHosts`. Errors do not return archive contents or server paths."
+      },
+      "tr": {
+        "title": "Doğrulama, işlem sınırları ve gizlilik",
+        "body": "Sağlama açıklamaları çözüm modelinden gelir. KATMANDU şu anda bağımsız sembolik cebir/CAS denetimi çalıştırmaz; arayüz ve çıktılar bu açıklamaları **Kontrol edilmedi** olarak gösterir. Eksik açıklamalar başarılı doğrulama iddiasına dönüştürülmez.\n\nSekme kapatma, yerine yeni istek başlatma veya **Durdur** düğmesi mevcut işlemi iptal eder ve geç gelen yanıtın güncel çalışmanın yerine geçmesini önler. İptal, sağlayıcının zaten işlediği isteklerin ücretini geri almaz.\n\nAyarlar’da eşzamanlı işlem sayısı (varsayılan 2), zaman aşımı (kuyruk dahil varsayılan 300 saniye) ve soru başına tahmini USD sınırı (0 kapatır) bulunur. Sınır açıkken katalog fiyatı bilinmeyen istekler engellenir ve çağrı öncesi tahmini girdi/çıktı payları kontrol edilir. Bilinen ortak soru tespiti maliyetleri de dahildir. Bu, uygulama tarafı tahminidir; sağlayıcının uyguladığı kesin fatura sınırı değildir.\n\nOpenRouter, en fazla 20 sayfalık PDF’lerin tüm sayfalarını görüntüleyip gönderir; daha uzun veya okunamayan belgeler açık hatayla durur. OpenAI gerçek PDF dosya baytlarını gönderir. Model veya uç nokta verilen biçimi desteklemelidir.\n\nAPI çağrıları tarayıcıdan seçilen sağlayıcıya doğrudan gider; anahtarlar tarayıcı ayarlarında tutulur. Kullanılan girdi ve ekler o sağlayıcıya gönderilir. `VITE_*` ortam değerleri tarayıcı paketlerine dahil edilir. Üretim derlemesi, dolu `VITE_*_API_KEY`, token, parola veya gizli değer değişkenlerini reddeder; derlemeden önce bunları kaldırıp anahtarları Ayarlar’dan girin. Gemini anahtarı URL yerine `x-goog-api-key` başlığında gönderilir. Tarayıcı deposu şifreli bir anahtar kasası değildir; uygulamanın kaynağında çalışan betikler kayıtlı anahtarları okuyabilir. Hizmet sahibinin anahtarını kullanan ortak bir servis için ayrı, kimlik doğrulamalı arka uç gerekir. Yerel arşivler, ortam dosyaları ve özel deneme/tasarım klasörleri Git dışında tutulur; geliştirme sunucusunda doğrudan dosya erişimine kapatılır.\n\nGeliştirme ve önizleme sunucuları varsayılan olarak `127.0.0.1` üzerinde dinler. `KATMANDU_SHARE_NETWORK=1 npm run dev`, arşiv erişimi dahil ağ paylaşımını kullanıcı kimlik doğrulaması olmadan açıkça etkinleştirir. Arşiv API’si farklı sitelerden gelen istekleri reddeder ve değişiklik işlemleri için uygulama başlığını zorunlu tutar.\n\nSağlayıcı istekleri, katalog yenilemeleri ve bağlantı testleri HTTPS gerektirir; HTTP yalnızca yerel proxy adreslerinde (`localhost`, `127.0.0.1`, `[::1]`) kullanılabilir. Kullanıcı adı/parola içeren adresler ve HTTP yönlendirmeleri reddedilir. Özel uç noktalar girdilerinizi ve anahtarlarınızı alır; yalnızca güvendiğiniz adresleri yapılandırın. Arşiv API’si DNS rebinding saldırılarını engellemek için Host başlığını da doğrular; özel alan adları Vite’ın `server.allowedHosts` veya `preview.allowedHosts` listesinde açıkça tanımlanmalıdır. Hatalarda arşiv içerikleri veya sunucu yolları döndürülmez."
+      }
+    },
+    {
+      "id": "development",
+      "en": {
+        "title": "Development and bilingual documentation",
+        "body": "```bash\nnpm test\nnpm run build\nnpm run docs:sync\nnpm run docs:check\n```\n\nTests cover provider requests with simulated HTTP responses, mounted application flows, browser/disk storage, cancellation, exports and both languages. They do not require paid API calls or a LaTeX compiler.\n\n**Keep both READMEs together:** edit both the `en` and `tr` versions of each affected section in [`docs/readme.content.json`](docs/readme.content.json), then run `npm run docs:sync`. The generator writes this main English README and `README.tr.md` together. `npm test` runs `docs:check` first and fails if either generated README is out of date. New interface text must be registered in `src/i18n/en.json` with its Turkish source; language and placeholder regression tests guard the catalog."
+      },
+      "tr": {
+        "title": "Geliştirme ve iki dilli dokümantasyon",
+        "body": "```bash\nnpm test\nnpm run build\nnpm run docs:sync\nnpm run docs:check\n```\n\nTestler sahte HTTP yanıtlarıyla sağlayıcı isteklerini, çalışan uygulama akışlarını, tarayıcı/disk deposunu, iptali, dışa aktarmayı ve iki dili kapsar. Ücretli API çağrısı veya LaTeX derleyicisi gerekmez.\n\n**İki README’yi birlikte güncelleyin:** [`docs/readme.content.json`](docs/readme.content.json) dosyasında değişen her bölümün hem `en` hem `tr` sürümünü düzenleyip `npm run docs:sync` çalıştırın. Üretici, ana İngilizce README ile `README.tr.md` dosyasını birlikte yazar. `npm test`, önce `docs:check` çalıştırır; dosyalardan biri güncel değilse başarısız olur. Yeni arayüz metnini Türkçe kaynağıyla `src/i18n/en.json` içine ekleyin; dil ve yer tutucu regresyon testleri kataloğu denetler."
+      }
+    },
+    {
+      "id": "license",
+      "en": {
+        "title": "License",
+        "body": "Licensed under the [MIT License](LICENSE). Copyright © 2026 Mesut Kaval."
+      },
+      "tr": {
+        "title": "Lisans",
+        "body": "[MIT Lisansı](LICENSE) ile lisanslanmıştır. Telif hakkı © 2026 Mesut Kaval."
+      }
+    }
+  ]
+}

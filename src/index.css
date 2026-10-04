@@ -1,0 +1,587 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  /* Light-mode gold is retained; dark mode uses the spectrum below. */
+  --color-spectrum-red: #f16b6b;
+  --color-spectrum-orange: #ef9b4f;
+  --color-spectrum-yellow: #e8c552;
+  --color-spectrum-green: #59bd8c;
+  --color-spectrum-blue: #74a9f5;
+  --color-spectrum-violet: #b18aeb;
+  --color-spectrum-pink: #e77cab;
+  --color-amber-50: #f5f2eb;
+  --color-amber-100: #eae4d8;
+  --color-amber-200: #d9ceba;
+  --color-amber-300: #e6c36d;
+  --color-amber-400: #d4aa45;
+  --color-amber-500: #b98d2c;
+  --color-amber-600: #996f20;
+  --color-amber-700: #63543f;
+  --color-amber-800: #514532;
+  --color-amber-900: #403727;
+  --color-amber-950: #252017;
+  --color-canvas: #f5f1e8;
+  --color-panel: #faf6ee;
+  --color-paper: #fdfcf7;
+  --color-selected: #eae4d8;
+  --font-serif: "Newsreader", "EB Garamond", Georgia, serif;
+  --font-mono: "JetBrains Mono", monospace;
+  --shadow-2xs: 0 1px 2px 0 rgba(0, 0, 0, 0.04);
+}
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  font-family: var(--font-serif);
+  background-color: #f5f1e8;
+  color: #231f1c;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+html.dark {
+  color-scheme: dark;
+  --color-canvas: #000000;
+  --color-panel: #191919;
+  --color-paper: #101010;
+  --color-selected: #252525;
+  /* Neutral grays separate content and selection from the black workspace. */
+  --color-stone-950: #080808;
+  --color-stone-900: #111111;
+  --color-stone-800: #242424;
+  --color-stone-700: #353535;
+  --color-stone-600: #656565;
+  --color-stone-500: #8a8a8a;
+  --color-stone-400: #a5a5a5;
+  --color-stone-300: #c5c5c5;
+  --color-stone-200: #dddddd;
+  --color-stone-100: #ededed;
+  --color-stone-50: #f6f6f6;
+  /* Existing accent utilities share a readable blue scale in dark mode. */
+  --color-amber-50: #edf4ff;
+  --color-amber-100: #dce9ff;
+  --color-amber-200: #bfd6ff;
+  --color-amber-300: #9fc2ff;
+  --color-amber-400: var(--color-spectrum-blue);
+  --color-amber-500: #4c8fea;
+  --color-amber-600: #3979ce;
+  --color-amber-700: #2b61aa;
+  --color-amber-800: #1d314f;
+  --color-amber-900: #152238;
+  --color-amber-950: #101a2b;
+  --spectrum-branch-start: var(--color-spectrum-pink);
+  --spectrum-branch-end: var(--color-spectrum-blue);
+  --spectrum-stripe: linear-gradient(90deg,
+    var(--color-spectrum-red) 0% 16.666%,
+    var(--color-spectrum-orange) 16.666% 33.333%,
+    var(--color-spectrum-yellow) 33.333% 50%,
+    var(--color-spectrum-green) 50% 66.666%,
+    var(--color-spectrum-blue) 66.666% 83.333%,
+    var(--color-spectrum-violet) 83.333% 100%);
+}
+
+html.dark, html.dark body, html.dark #root {
+  background-color: var(--color-canvas);
+  color: var(--color-stone-100);
+}
+
+/* A Polaroid-inspired spectrum, with violet and pink Pride accents.
+   Color stays on landmarks and interactions; the workspace remains black. */
+@media screen {
+  .dark .spectrum-header::after {
+    content: "";
+    position: absolute;
+    inset: auto 0 -1px;
+    height: 3px;
+    background: var(--spectrum-stripe);
+    pointer-events: none;
+  }
+
+  .dark .spectrum-brand > svg { color: var(--color-spectrum-pink); }
+  .dark .spectrum-library-toggle svg { color: var(--color-spectrum-orange); }
+  .dark .spectrum-export svg { color: var(--color-spectrum-green); }
+  .dark .spectrum-library-heading > svg { color: var(--color-spectrum-orange); }
+  .dark .spectrum-tree-heading > svg { color: var(--color-spectrum-violet); }
+
+  .dark .spectrum-tab-active::before,
+  .dark .spectrum-dialog::before,
+  .dark .spectrum-paper::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto;
+    height: 3px;
+    background: var(--spectrum-stripe);
+    border-radius: inherit;
+    pointer-events: none;
+  }
+
+  .dark .spectrum-paper,
+  .dark .spectrum-dialog { position: relative; }
+
+  .dark .spectrum-welcome-icon {
+    border-color: var(--color-spectrum-pink);
+    background: var(--color-panel);
+  }
+  .dark .spectrum-welcome-icon > svg { color: var(--color-spectrum-pink); }
+  .dark .spectrum-welcome-kicker { color: var(--color-spectrum-violet); }
+
+  .dark [data-spectrum="0"] { --spectrum-node: var(--color-spectrum-red); }
+  .dark [data-spectrum="1"] { --spectrum-node: var(--color-spectrum-orange); }
+  .dark [data-spectrum="2"] { --spectrum-node: var(--color-spectrum-yellow); }
+  .dark [data-spectrum="3"] { --spectrum-node: var(--color-spectrum-green); }
+  .dark [data-spectrum="4"] { --spectrum-node: var(--color-spectrum-blue); }
+  .dark [data-spectrum="5"] { --spectrum-node: var(--color-spectrum-violet); }
+
+  .dark .spectrum-section > h2 {
+    border-bottom-color: color-mix(in srgb, var(--spectrum-node) 40%, var(--color-stone-800));
+  }
+  .dark .spectrum-section > h2 > div > span { color: var(--spectrum-node); }
+
+  .dark .spectrum-library-card {
+    border-left: 3px solid color-mix(in srgb, var(--spectrum-node) 65%, var(--color-stone-800));
+  }
+  .dark .spectrum-library-card[data-active="true"] {
+    border-color: var(--spectrum-node);
+    background: var(--color-selected);
+  }
+  .dark .spectrum-library-card[data-active="true"] h4 { color: var(--spectrum-node); }
+  .dark .spectrum-library-indicator { background: var(--spectrum-node); }
+  .dark .spectrum-library-category {
+    background: var(--color-panel);
+    color: var(--spectrum-node);
+    border-color: color-mix(in srgb, var(--spectrum-node) 30%, var(--color-stone-800));
+  }
+
+  .dark .spectrum-tree-node {
+    background: var(--color-panel);
+    border-color: color-mix(in srgb, var(--spectrum-node) 40%, var(--color-stone-800));
+    border-top: 3px solid var(--spectrum-node);
+    color: var(--color-stone-200);
+    box-shadow: none;
+    animation: nodeEnter 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  .dark .spectrum-tree-node:hover { border-color: var(--spectrum-node); }
+  .dark .spectrum-tree-node[data-active="true"] {
+    background: var(--color-selected);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--spectrum-node) 40%, transparent);
+  }
+  .dark .spectrum-tree-node svg { color: var(--spectrum-node); }
+
+  .dark .spectrum-primary-action {
+    background: #a63e68;
+    color: #ffffff;
+    border: 1px solid #d66b98;
+  }
+  .dark .spectrum-primary-action:hover:not(:disabled) { background: #b84875; }
+  .dark .spectrum-primary-action:focus-visible {
+    outline: 2px solid var(--color-spectrum-pink);
+    outline-offset: 3px;
+  }
+}
+
+/* KaTeX font, satır kaydırma ve taşmayı önleme ayarları */
+.katex {
+  font-size: 1.05em;
+  text-rendering: auto;
+  white-space: normal !important;
+  overflow-wrap: anywhere;
+}
+
+.dark .katex {
+  color: #f5f5f4;
+}
+
+.katex-display {
+  margin: 0.4em 0 !important;
+  overflow-x: visible !important;
+  overflow-y: visible !important;
+  white-space: normal !important;
+  text-align: center;
+}
+
+.katex-display > .katex {
+  text-align: center;
+  white-space: normal !important;
+  display: inline-block;
+  max-width: 100%;
+}
+
+.katex-display > .katex > .katex-html {
+  white-space: normal !important;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: baseline;
+  row-gap: 0.35rem;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
+/* İnteraktif formül ve sembol tıklama stili */
+.interactive-math-tag {
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+  cursor: pointer;
+  border-bottom: 1.5px dotted rgba(121, 105, 81, 0.45);
+  border-radius: 3px;
+  padding: 0 2px;
+  display: inline;
+}
+
+.interactive-math-tag:hover {
+  background-color: rgba(234, 228, 216, 0.75);
+  border-bottom-color: var(--color-amber-600);
+}
+
+.dark .interactive-math-tag {
+  border-bottom-color: color-mix(in srgb, var(--color-spectrum-blue) 55%, transparent);
+}
+
+.dark .interactive-math-tag:hover {
+  background-color: rgba(255, 255, 255, 0.07);
+  border-bottom-color: var(--color-amber-400);
+}
+
+/* A4 Baskı ve Sayfa Düzeni (PDF Dışa Aktarma Hazırlığı) */
+@page {
+  size: A4 portrait;
+  margin: 15mm 12mm 15mm 12mm;
+}
+
+@media print {
+  /* Ekran arayüzü, modal pencereleri ve gezinme araçlarını baskıda tamamen gizle */
+  #katmandu-screen-root,
+  .no-print,
+  .fixed,
+  [role="dialog"] {
+    display: none !important;
+  }
+
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    font-size: 11pt !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    height: auto !important;
+    overflow: visible !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  html, #root {
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  /* Yalnızca ve tam olarak KATMANDU A4 akademik çıktısı */
+  #katmandu-print-root {
+    display: block !important;
+    visibility: visible !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    -webkit-text-fill-color: #000000 !important;
+  }
+
+  /* KaTeX ve matematik formüllerinin baskıda kesinlikle simsiyah (#000000) olması */
+  .katex,
+  .katex *,
+  .katex-html,
+  .katex-html *,
+  .katex-display,
+  .katex-display *,
+  .dark .katex,
+  .dark .katex * {
+    color: #000000 !important;
+    -webkit-text-fill-color: #000000 !important;
+    text-shadow: none !important;
+    border-color: #000000 !important;
+  }
+
+  /* İnteraktif formül alt çizgilerini baskıda temizle */
+  .interactive-math-tag,
+  .interactive-math-tag * {
+    border-bottom: none !important;
+    background-color: transparent !important;
+    color: #000000 !important;
+    -webkit-text-fill-color: #000000 !important;
+  }
+
+  .page-break-avoid {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  .break-after-avoid,
+  h1, h2, h3, h4 {
+    break-after: avoid !important;
+    page-break-after: avoid !important;
+  }
+
+  /* KaTeX display formülleri için dikey boşluk sıkılaştırması (baskıda aşırı boşlukları önler) */
+  #katmandu-print-root .katex-display {
+    margin: 0.35em 0 !important;
+  }
+
+  /* Yetim satır ve paragraf kırılma kalkanı */
+  #katmandu-print-root p,
+  #katmandu-print-root .print-prose {
+    orphans: 3 !important;
+    widows: 3 !important;
+  }
+
+  /* Katman konteyneri doğal olarak sayfalar arasında akabilmeli */
+  #katmandu-print-root .print-layer-container {
+    break-inside: auto !important;
+    page-break-inside: auto !important;
+  }
+
+  /* Şekil ve diyagramların baskıda (koyu mod açık olsa dahi) bembeyaz zemin ve kusursuz okunabilir olması */
+  #katmandu-print-root .simple-diagram-card,
+  .dark #katmandu-print-root .simple-diagram-card,
+  #katmandu-print-root figure,
+  .dark #katmandu-print-root figure,
+  #katmandu-print-root figure > div,
+  .dark #katmandu-print-root figure > div {
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    border-color: #d6d3d1 !important;
+    color: #000000 !important;
+    box-shadow: none !important;
+  }
+
+  /* Şekil üst araç çubuğunu (Pusula, Zoom butonları vb.) baskıda tamamen gizle */
+  #katmandu-print-root .simple-diagram-toolbar,
+  .dark #katmandu-print-root .simple-diagram-toolbar {
+    display: none !important;
+  }
+
+  /* SVG çizim alanının baskıda beyaz zeminle çizilmesi */
+  #katmandu-print-root svg,
+  .dark #katmandu-print-root svg {
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+  }
+
+  /* SVG grid deseni baskıda silik ve temiz olmalı */
+  #katmandu-print-root #academic-grid path,
+  .dark #katmandu-print-root #academic-grid path {
+    stroke: #e7e5e4 !important;
+  }
+
+  /* Şekil içindeki KaTeX etiketlerinin baskıda beyaz arka plana karşı net ve simsiyah olması */
+  #katmandu-print-root svg foreignObject,
+  .dark #katmandu-print-root svg foreignObject,
+  #katmandu-print-root svg foreignObject * {
+    color: #000000 !important;
+    -webkit-text-fill-color: #000000 !important;
+  }
+}
+
+/* KaTeX hata durumu */
+.katex-error {
+  color: #b91c1c;
+  font-family: monospace;
+  font-size: 0.85em;
+  background: #fee2e2;
+  padding: 1px 4px;
+  border-radius: 2px;
+}
+
+.dark .katex-error {
+  color: #f87171;
+  background: #450a0a;
+}
+
+/* Özel kaydırma çubuğu */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #d8cebe;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #b8a892;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #44403c;
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #57534e;
+}
+
+/* Zihin Haritası ve Aşağı Doğru Dallanma Ağacı Animasyonları */
+@keyframes branchFlow {
+  from {
+    stroke-dashoffset: 28;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes branchPulse {
+  0%, 100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 0.85;
+  }
+}
+
+@keyframes nodeEnter {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes radarPulse {
+  0% {
+    transform: scale(0.97);
+    box-shadow: 0 0 0 0 rgba(172, 155, 131, 0.18);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 7px rgba(172, 155, 131, 0);
+  }
+  100% {
+    transform: scale(0.97);
+    box-shadow: 0 0 0 0 rgba(172, 155, 131, 0);
+  }
+}
+
+.animate-branch-flow {
+  animation: branchFlow 1.6s linear infinite;
+}
+
+.animate-branch-pulse {
+  animation: branchPulse 3s ease-in-out infinite;
+}
+
+.animate-node-enter {
+  animation: nodeEnter 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-radar-pulse {
+  animation: radarPulse 2.2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Arka plan yumuşak gri ızgara noktaları (Subtle Gray Dot Grid) */
+.canvas-dot-grid {
+  background-image: radial-gradient(circle, #d6d3d1 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+
+.dark .canvas-dot-grid {
+  background-image: none;
+}
+
+.mindmap-dot-grid {
+  background-image: radial-gradient(circle, #d6d3d1 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.dark .mindmap-dot-grid {
+  background-image: radial-gradient(circle, #202020 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* Keep mounted panels and their scroll positions when switching mobile views. */
+[data-workspace-panel][hidden] { display: none !important; }
+.touch-derivation-control { display: none; }
+
+@media screen and (max-width: 1199px) {
+  #katmandu-screen-root {
+    max-height: none;
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  }
+  .spectrum-header {
+    height: auto;
+    min-height: 76px;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 2px 8px;
+    padding: 4px 8px;
+  }
+  .spectrum-header .spectrum-brand {
+    position: static;
+    transform: none;
+    grid-row: 1;
+    grid-column: 1 / -1;
+    justify-self: center;
+  }
+  .spectrum-header > div:first-child { grid-row: 2; grid-column: 1; }
+  .spectrum-header > div:last-child {
+    grid-row: 2;
+    grid-column: 2;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  .spectrum-header > div:last-child > div { display: none; }
+  #katmandu-screen-root button,
+  .workspace-modal button { min-height: 44px; min-width: 44px; }
+  .spectrum-header button { min-width: 44px; }
+  .provider-status { padding: 6px 12px; gap: 8px; font-size: 12px; line-height: 1.4; }
+  .provider-status > span { min-width: 0; overflow-wrap: anywhere; }
+  [data-workspace-panel="library"], [data-workspace-panel="tree"] {
+    width: 100% !important;
+    min-width: 0;
+    border: 0;
+  }
+  .workspace-resize-handle, .solution-zoom-controls { display: none; }
+  .workspace-library h4 { font-size: 15px; }
+  .workspace-library p { font-size: 13px; }
+  .solution-scroll { padding: 8px; overscroll-behavior: contain; }
+  .workspace-welcome { margin-block: 0; padding: 20px 0; }
+  .workspace-welcome > div { padding-inline: 12px; }
+  .workspace-solution > div.sticky { padding: 10px; }
+  .workspace-solution > div.sticky > div:first-child { flex-wrap: wrap; }
+  .a4-paper { margin-block: 0; padding: 24px 14px; min-height: 0; overflow-wrap: anywhere; }
+  .a4-paper > section { padding: 14px; }
+  .a4-paper h1 { font-size: 24px; }
+  .a4-paper p { text-align: left; }
+  .a4-paper [data-layer-depth] > .inline-expansion-body { padding: 12px; }
+  .a4-paper .simple-diagram-card { width: 100%; min-width: 0; max-width: 100%; }
+  .simple-diagram-toolbar { flex-wrap: wrap; gap: 4px; }
+  .simple-diagram-toolbar > div:last-child { margin-left: auto; }
+  .simple-diagram-toolbar button { min-width: 44px; }
+  .a4-paper .katex-content.block { max-width: 100%; min-width: 0; overflow-x: auto; padding-block: 2px; }
+  .a4-paper .katex-display { overflow-x: auto !important; overflow-y: hidden !important; padding-block: 4px; }
+  .workspace-modal { padding: 8px; padding-top: max(8px, env(safe-area-inset-top)); padding-bottom: max(8px, env(safe-area-inset-bottom)); }
+  .workspace-modal-card { padding: 16px; min-width: 0; max-height: calc(100dvh - 32px - env(safe-area-inset-top) - env(safe-area-inset-bottom)); overflow-y: auto; }
+  .export-modal-card { padding: 0; }
+  .export-modal-card > div { padding-inline: 14px; }
+  .export-modal-card > div:last-child { flex-wrap: wrap; gap: 8px; }
+  #katmandu-screen-root input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+  #katmandu-screen-root textarea,
+  #katmandu-screen-root select { font-size: 16px; min-width: 0; max-width: 100%; }
+  #katmandu-screen-root input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+  #katmandu-screen-root select { min-height: 44px; }
+  [data-workspace-panel="tree"] { overflow-wrap: anywhere; }
+  .touch-derivation-control { display: inline-flex; align-items: center; gap: 6px; margin-bottom: 8px; }
+}
+
+@media screen and (pointer: coarse) {
+  #katmandu-screen-root button { min-height: 44px; min-width: 44px; }
+  .touch-derivation-control { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; margin-bottom: 8px; }
+  .group-hover\:opacity-100 { opacity: 1; }
+}

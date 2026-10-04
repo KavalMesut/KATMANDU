@@ -1,0 +1,69 @@
+# Dependencies
+node_modules/
+/.pnp
+.pnp.js
+
+# Production build outputs
+dist/
+dist-ssr/
+build/
+
+# Local solution data stays private; only the archive documentation is public.
+/solutions/*
+!/solutions/README.md
+!/solutions/README.tr.md
+# Protect older checkouts until the legacy archive has been migrated.
+/cozumler/
+
+# Private experiments and design explorations stay on this computer.
+/basarisiz_deneme/
+/tasarim_secenekleri/
+# Local planning notes and assistant instructions are not public documentation.
+/FUTURE_ROADMAP.md
+/EXPORT_ROADMAP.md
+AGENTS.md
+# This local launcher contains the current checkout's absolute path.
+/KATMANDU.desktop
+
+# Environment variables & API Keys (CRITICAL - DO NOT COMMIT SECRETS)
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.cert
+*.secret
+
+# Logs
+.katmandu-launch.lock
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Testing & Coverage
+coverage/
+.nyc_output/
+.vitest/
+
+# Editor & IDE directories
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# OS Generated
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
