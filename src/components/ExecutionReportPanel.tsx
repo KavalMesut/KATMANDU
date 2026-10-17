@@ -55,7 +55,7 @@ export function ExecutionReportPanel({ report }: { report: SolutionExecutionRepo
         ))}
       </div>
       <div className="mt-2 pt-2 border-t border-stone-200 dark:border-stone-700 font-medium">
-        {translate("Toplam:")}{usageText(report.totalUsage)}
+        {translate("Toplam:")} {usageText(report.totalUsage)}
         <div>{translate("Toplam ücret:")} {completeCost
           ? `${dollars(knownCost)}${estimated ? translate(" (en az bir tahmin içerir)") : ''}`
           : pricedRuns.length ? translate("bilinmiyor · bilinen kısım {0}", [dollars(knownCost)]) : translate("bilinmiyor")}</div>

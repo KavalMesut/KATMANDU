@@ -34,7 +34,7 @@ export const NavigationBreadcrumbs: React.FC<NavigationBreadcrumbsProps> = ({
               {translate("Çözüm Düzeyi")}</span>
           </div>
           <span className="text-xs font-mono font-medium px-2 py-0.5 rounded bg-stone-200/80 dark:bg-stone-800 text-stone-800 dark:text-stone-200">
-            {translate("Derinlik")}{currentDepth}
+            {translate("Derinlik")} {currentDepth}
           </span>
         </div>
 

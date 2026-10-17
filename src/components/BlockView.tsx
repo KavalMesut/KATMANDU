@@ -41,8 +41,8 @@ export const BlockView: React.FC<BlockViewProps> = ({
   switch (block.kind) {
     case 'prose':
       return (
-        <div id={block.id} data-block-id={block.id} className="my-3">
-          <p className="text-[#262320] dark:text-stone-200 text-[16px] leading-[1.65] font-serif text-justify">
+        <div id={block.id} data-block-id={block.id} className="my-3.5">
+          <p className="text-[#262320] dark:text-stone-200 text-[16px] leading-[1.82] font-serif break-words">
             <KaTeXRenderer content={block.text} onFormulaClick={onFormulaClick} />
           </p>
 
@@ -77,14 +77,14 @@ export const BlockView: React.FC<BlockViewProps> = ({
       const isClickable = block.expandable !== false && Boolean(onSelectEquation);
 
       return (
-        <div id={block.id} data-block-id={block.id} className="my-3">
+        <div id={block.id} data-block-id={block.id} className="my-3.5">
           <div
             onDoubleClick={() => {
               if (isClickable && onSelectEquation) {
                 onSelectEquation(block);
               }
             }}
-            className={`group relative py-2.5 px-4 rounded-r transition-all duration-150 flex items-center justify-between border-l-3 ${
+            className={`group relative py-3 px-4 rounded-r transition-all duration-150 flex items-center justify-between gap-3 border-l-3 ${
               isSelected
                 ? 'bg-[#f4ede0] dark:bg-amber-950/40 border-l-[#78350f] dark:border-l-amber-500 border-y border-r border-[#dfd4be] dark:border-amber-800 shadow-xs'
                 : isClickable
@@ -94,13 +94,13 @@ export const BlockView: React.FC<BlockViewProps> = ({
             title={isClickable ? translate("Bu denklemin analitik türetimini yerinde açmak için çift tıklayın") : undefined}
           >
             {/* Sol: Denklem Alanı (Taşmasız & Çok Satırlı Sarmalamalı) */}
-            <div className="flex-1 flex justify-center py-1 min-w-0 max-w-full">
+            <div className="flex-1 flex justify-center py-1.5 min-w-0 max-w-full overflow-x-auto">
               <KaTeXRenderer content={block.latex} block={true} />
             </div>
 
             {/* Sağ: Deterministik Denklem Numarası (1), (2)... */}
             {block.displayNumber !== undefined && (
-              <div className="ml-4 pl-2 shrink-0 select-none text-[#8c7e72] dark:text-stone-400 font-serif text-sm tracking-wide">
+              <div className="ml-2 pl-2 shrink-0 select-none text-[#8c7e72] dark:text-stone-400 font-serif text-sm tracking-wide">
                 <span>({block.displayNumber})</span>
               </div>
             )}

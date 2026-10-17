@@ -532,7 +532,7 @@ export const KaTeXRenderer: React.FC<KaTeXRendererProps> = ({
               }
             }}
             title={tooltip}
-            className={`interactive-math-tag inline ${
+            className={`interactive-math-tag ${isDisplay ? 'interactive-math-display' : 'inline'} ${
               onFormulaClick ? 'cursor-pointer hover:bg-amber-100/60 dark:hover:bg-amber-950/40' : ''
             }`}
             dangerouslySetInnerHTML={{ __html: html }}

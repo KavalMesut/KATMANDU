@@ -111,37 +111,37 @@ export const PaperLayout: React.FC<PaperLayoutProps> = ({
         style={{
           zoom
         }}
-        className="spectrum-paper w-full max-w-[210mm] min-h-[297mm] mx-auto my-8 bg-[#fdfcf7] dark:bg-paper border border-[#e6decb] dark:border-stone-800 shadow-[0_4px_24px_-4px_rgba(90,70,40,0.07),0_2px_8px_-2px_rgba(0,0,0,0.04)] rounded-xs px-10 sm:px-16 py-14 transition-colors duration-200 select-text text-[#231f1c] dark:text-stone-100 font-serif text-[16px] leading-[1.65] a4-paper"
+        className="spectrum-paper w-full max-w-[1440px] min-h-[calc(100vh-9.5rem)] mx-auto my-1 sm:my-2 bg-[#fdfcf7] dark:bg-paper border border-[#d8ccb4] dark:border-stone-700/90 shadow-[0_4px_24px_-4px_rgba(90,70,40,0.07),0_2px_8px_-2px_rgba(0,0,0,0.04)] rounded-xl px-6 sm:px-10 lg:px-14 py-8 sm:py-10 transition-colors duration-200 select-text text-[#231f1c] dark:text-stone-100 font-serif text-[16px] leading-[1.78] a4-paper"
       >
         <p className="mb-6 text-sm font-sans text-stone-600 dark:text-stone-400" role="note">
           {getVerificationNotice(document)}
         </p>
         {/* Üst Belge Başlığı */}
-        <header className="border-b border-[#e6decb] dark:border-stone-800 pb-6 mb-8 text-center">
+        <header className="border-b border-[#e6decb] dark:border-stone-700/80 pb-6 mb-8 text-center">
           <div className="inline-flex items-center gap-1.5 text-stone-600 dark:text-stone-400 text-xs uppercase tracking-widest font-sans font-medium mb-2">
             <BookOpen className="w-3.5 h-3.5 text-amber-800 dark:text-amber-500" />
             <span>{translate("KATMANDU Bilimsel Çözüm Raporu")}</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-serif font-bold text-[#1c1917] dark:text-stone-100 tracking-tight leading-snug">
+          <h1 className="text-2xl sm:text-3xl font-serif font-bold text-[#1c1917] dark:text-stone-100 tracking-tight leading-snug break-words">
             {document.problemTitle}
           </h1>
         </header>
 
         {/* Problem Metni */}
-        <section className="mb-8 p-6 rounded bg-[#f9f6ee] dark:bg-panel border border-[#e6decb] dark:border-stone-800 text-[#231f1c] dark:text-stone-200 font-serif text-base leading-relaxed shadow-2xs">
-          <div className="flex items-center justify-between mb-3 border-b border-[#e6decb]/80 dark:border-stone-800 pb-2">
+        <section className="mb-8 p-6 rounded-lg bg-[#f9f6ee] dark:bg-panel border border-[#e6decb] dark:border-stone-700/80 text-[#231f1c] dark:text-stone-200 font-serif text-base leading-[1.78] shadow-2xs">
+          <div className="flex flex-wrap items-center justify-between gap-2 mb-3 border-b border-[#e6decb]/80 dark:border-stone-700/80 pb-2">
             <span className="font-semibold not-italic font-sans text-xs uppercase tracking-wider text-[#78350f] dark:text-amber-400">
               PROBLEM
             </span>
             {document.attachments && document.attachments.length > 0 && (
               <span className="text-[11px] font-sans not-italic text-stone-500 dark:text-stone-400">
-                {translate("Kaynak:")}{document.attachments.map((a) => a.name).join(', ')}
+                {translate("Kaynak:")} {document.attachments.map((a) => a.name).join(', ')}
               </span>
             )}
           </div>
 
           {/* Transkribe Edilmiş Tam Soru Metni */}
-          <div className="italic text-[#1c1917] dark:text-stone-100 mb-4">
+          <div className="italic text-[#1c1917] dark:text-stone-100 mb-4 break-words">
             <KaTeXRenderer
               content={document.problemText || translate("Problem görsel/doküman üzerinden çözümlenmiştir.")}
               onFormulaClick={handleFormulaClick}
@@ -151,7 +151,7 @@ export const PaperLayout: React.FC<PaperLayoutProps> = ({
           {/* Sorunun Vektörel Kurulum Şeması (problemDiagram) */}
           {document.problemDiagram && (
             <div className="my-6 not-italic">
-              <div className="max-w-md mx-auto">
+              <div className="max-w-2xl mx-auto">
                 <SimpleDiagram spec={document.problemDiagram} />
               </div>
             </div>

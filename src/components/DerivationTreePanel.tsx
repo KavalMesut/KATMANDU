@@ -44,8 +44,8 @@ interface BranchPath {
 }
 
 const CARD_WIDTH = 156;
-const CARD_HEIGHT = 62;
-const LEVEL_HEIGHT = 105;
+const CARD_HEIGHT = 68;
+const LEVEL_HEIGHT = 108;
 const SIBLING_GAP = 24;
 
 /**
@@ -405,7 +405,7 @@ export const DerivationTreePanel: React.FC<DerivationTreePanelProps> = ({
             <Sparkles className="w-3 h-3 text-amber-600 dark:text-amber-400" />
             {translate("Aşağı & Sağa/Sola Dallanan Harita")}</span>
           <span className="font-mono px-1.5 py-0.2 rounded bg-stone-200/70 dark:bg-stone-800 text-stone-700 dark:text-stone-300 text-[10px]">
-            {translate("Derinlik")}{currentDepth}
+            {translate("Derinlik")} {currentDepth}
           </span>
         </div>
       </div>
@@ -571,7 +571,7 @@ export const DerivationTreePanel: React.FC<DerivationTreePanelProps> = ({
                     onSelectNode(pos.node.id);
                   }
                 }}
-                className={`spectrum-tree-node absolute rounded-lg p-2 cursor-pointer transition-all duration-150 border text-left shadow-xs hover:-translate-y-0.5 animate-node-enter ${
+                className={`spectrum-tree-node absolute rounded-lg p-2 cursor-pointer transition-all duration-150 border text-left shadow-xs hover:-translate-y-0.5 overflow-hidden animate-node-enter ${
                   isActive
                     ? 'bg-amber-100/95 dark:bg-selected border-amber-400 dark:border-amber-600 text-amber-950 dark:text-amber-100 ring-2 ring-amber-400/60 shadow-amber-500/15 animate-radar-pulse'
                     : isAlternative
@@ -605,13 +605,17 @@ export const DerivationTreePanel: React.FC<DerivationTreePanelProps> = ({
                       <FileText className="w-3 h-3 text-stone-400 dark:text-stone-500 shrink-0" />
                     )}
 
-                    <span className="text-[9px] font-mono text-stone-400 dark:text-stone-500">
+                    <span className="text-[9px] font-mono text-stone-400 dark:text-stone-500 shrink-0">
                       D{pos.node.depth}
                     </span>
+
+                    {isActive && (
+                      <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse shrink-0" />
+                    )}
                   </div>
 
                   {isAlternative ? (
-                    <span className="text-[8px] uppercase tracking-wider font-sans font-bold bg-indigo-100 dark:bg-indigo-900/80 text-indigo-800 dark:text-indigo-300 px-1 py-0.2 rounded border border-indigo-300 dark:border-indigo-700 shrink-0">
+                    <span className="text-[8px] uppercase tracking-wider font-sans font-bold bg-indigo-100 dark:bg-indigo-900/80 text-indigo-800 dark:text-indigo-300 px-1 py-0.2 rounded border border-indigo-300 dark:border-indigo-700 max-w-[88px] truncate">
                       {pos.node.pathMethodName || translate("2. Yol")}
                     </span>
                   ) : isAxiomatic ? (
@@ -626,16 +630,9 @@ export const DerivationTreePanel: React.FC<DerivationTreePanelProps> = ({
                 </div>
 
                 {/* Başlık */}
-                <div className="text-[11px] font-serif font-medium leading-snug line-clamp-2">
+                <div className="text-[11px] font-serif font-medium leading-snug line-clamp-2 break-words">
                   {translate(pos.node.label)}
                 </div>
-
-                {/* Aktif İndikatör */}
-                {isActive && (
-                  <div className="absolute bottom-1 right-1.5 flex items-center gap-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
-                  </div>
-                )}
               </div>
             );
           })}

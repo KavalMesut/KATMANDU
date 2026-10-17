@@ -1218,9 +1218,9 @@ export function App() {
         className="h-screen h-[100dvh] max-h-screen overflow-hidden bg-[#f5f1e8] dark:bg-canvas text-stone-900 dark:text-stone-100 flex flex-col font-serif antialiased transition-colors duration-200 print:hidden"
       >
       {/* İnce ve Sessiz Üst Bar (HD-001, HD-002) */}
-      <header className="spectrum-header relative h-12 border-b border-[#e5ded0] dark:border-stone-800 bg-[#faf6ee]/95 dark:bg-canvas backdrop-blur-xs px-6 flex items-center justify-between select-none shrink-0 sticky top-0 z-30 transition-colors">
+      <header className="spectrum-header relative h-12 border-b border-[#e5ded0] dark:border-stone-800 bg-[#faf6ee]/95 dark:bg-canvas backdrop-blur-xs px-4 sm:px-6 flex items-center justify-between gap-3 select-none shrink-0 sticky top-0 z-30 transition-colors">
         {/* Sol Bölüm: Kütüphane Butonu */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 shrink-0">
           <button
             type="button"
             onClick={() => compactLayout ? setMobileView(view => view === 'library' ? 'solution' : 'library') : setIsLibraryOpen(prev => !prev)}
@@ -1244,34 +1244,34 @@ export function App() {
         </div>
 
         {/* Orta Bölüm: Yazılımın Adı (KATMANDU) */}
-        <div className="spectrum-brand absolute left-1/2 -translate-x-1/2 flex items-center gap-2 pointer-events-none sm:pointer-events-auto">
-          <GraduationCap className="w-5 h-5 text-amber-900 dark:text-amber-500" />
+        <div className="spectrum-brand flex items-center justify-center gap-2 min-w-0 shrink-0">
+          <GraduationCap className="w-5 h-5 text-amber-900 dark:text-amber-500 shrink-0" />
           <span className="font-serif font-bold tracking-wider text-stone-900 dark:text-stone-100 text-sm sm:text-base">
             KATMANDU
           </span>
-          <span className="text-[11px] font-sans text-stone-400 dark:text-stone-500 font-normal hidden 2xl:inline">
+          <span className="text-[11px] font-sans text-stone-400 dark:text-stone-500 font-normal hidden 2xl:inline truncate">
             {translate("v2.0 • Bilimsel Çözüm ve Derinleşme")}</span>
         </div>
 
         {/* Sağ Bölüm: Aktif Model, Dönen Oklar, Tema Seçimi, Ayarlar, Dışa Aktar */}
-        <div className="flex items-center gap-2 sm:gap-2.5">
+        <div className="flex items-center justify-end gap-1.5 sm:gap-2 min-w-0 shrink-0">
           {/* 1. Aktif Model Rozeti (Tıklanabilir ve Ayarları Açar) */}
           {isUsingOpenRouter ? (
             <div
               onClick={() => setIsSettingsOpen(true)}
               title={translate("Model veya akıl yürütme seviyesini değiştirmek için tıklayın")}
-              className={`hidden md:inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-sans font-medium border cursor-pointer hover:opacity-90 transition-all ${
+              className={`hidden md:inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-sans font-medium border cursor-pointer hover:opacity-90 transition-all max-w-[240px] lg:max-w-[320px] ${
                 hasValidOpenRouterKey
                   ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800'
                   : 'bg-amber-50 dark:bg-amber-950/40 text-amber-900 dark:text-amber-300 border-amber-200 dark:border-amber-800'
               }`}
             >
-              <div className={`w-2 h-2 rounded-full ${hasValidOpenRouterKey ? 'bg-emerald-600' : 'bg-amber-500 animate-pulse'}`} />
-              <span>
+              <div className={`w-2 h-2 rounded-full shrink-0 ${hasValidOpenRouterKey ? 'bg-emerald-600' : 'bg-amber-500 animate-pulse'}`} />
+              <span className="truncate">
                 OpenRouter: {config.openrouterModel.split('/').pop() || config.openrouterModel} ({config.openrouterReasoningEffort || 'low'})
               </span>
               {!hasValidOpenRouterKey && (
-                <span className="text-[10px] text-amber-700 dark:text-amber-400 underline">
+                <span className="text-[10px] text-amber-700 dark:text-amber-400 underline shrink-0">
                   {translate("(Anahtar Girin)")}</span>
               )}
             </div>
@@ -1279,18 +1279,18 @@ export function App() {
             <div
               onClick={() => setIsSettingsOpen(true)}
               title={translate("Model veya sağlayıcıyı değiştirmek için tıklayın")}
-              className={`hidden md:inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-sans font-medium border cursor-pointer hover:opacity-90 transition-all ${
+              className={`hidden md:inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-sans font-medium border cursor-pointer hover:opacity-90 transition-all max-w-[240px] lg:max-w-[320px] ${
                 hasValidGeminiKey
                   ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800'
                   : 'bg-amber-50 dark:bg-amber-950/40 text-amber-900 dark:text-amber-300 border-amber-200 dark:border-amber-800'
               }`}
             >
-              <div className={`w-2 h-2 rounded-full ${hasValidGeminiKey ? 'bg-emerald-600' : 'bg-amber-500 animate-pulse'}`} />
-              <span>
+              <div className={`w-2 h-2 rounded-full shrink-0 ${hasValidGeminiKey ? 'bg-emerald-600' : 'bg-amber-500 animate-pulse'}`} />
+              <span className="truncate">
                 Google {config.geminiModel} ({config.geminiThinkingLevel || 'medium'})
               </span>
               {!hasValidGeminiKey && (
-                <span className="text-[10px] text-amber-700 dark:text-amber-400 underline">
+                <span className="text-[10px] text-amber-700 dark:text-amber-400 underline shrink-0">
                   {translate("(Ücretsiz Anahtar Girin)")}</span>
               )}
             </div>
@@ -1298,18 +1298,18 @@ export function App() {
             <div
               onClick={() => setIsSettingsOpen(true)}
               title={translate("Model veya sağlayıcıyı değiştirmek için tıklayın")}
-              className={`hidden md:inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-sans font-medium border cursor-pointer hover:opacity-90 transition-all ${
+              className={`hidden md:inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-sans font-medium border cursor-pointer hover:opacity-90 transition-all max-w-[240px] lg:max-w-[320px] ${
                 hasValidDeepSeekKey
                   ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800'
                   : 'bg-amber-50 dark:bg-amber-950/40 text-amber-900 dark:text-amber-300 border-amber-200 dark:border-amber-800'
               }`}
             >
-              <div className={`w-2 h-2 rounded-full ${hasValidDeepSeekKey ? 'bg-emerald-600' : 'bg-amber-500 animate-pulse'}`} />
-              <span>
+              <div className={`w-2 h-2 rounded-full shrink-0 ${hasValidDeepSeekKey ? 'bg-emerald-600' : 'bg-amber-500 animate-pulse'}`} />
+              <span className="truncate">
                 DeepSeek {config.deepseekModel}
               </span>
               {!hasValidDeepSeekKey && (
-                <span className="text-[10px] text-amber-700 dark:text-amber-400 underline">
+                <span className="text-[10px] text-amber-700 dark:text-amber-400 underline shrink-0">
                   {translate("(Anahtar Girin)")}</span>
               )}
             </div>
@@ -1317,18 +1317,18 @@ export function App() {
             <div
               onClick={() => setIsSettingsOpen(true)}
               title={translate("Model veya sağlayıcıyı değiştirmek için tıklayın")}
-              className={`hidden md:inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-sans font-medium border cursor-pointer hover:opacity-90 transition-all ${
+              className={`hidden md:inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-sans font-medium border cursor-pointer hover:opacity-90 transition-all max-w-[240px] lg:max-w-[320px] ${
                 hasValidOpenAIKey
                   ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800'
                   : 'bg-amber-50 dark:bg-amber-950/40 text-amber-900 dark:text-amber-300 border-amber-200 dark:border-amber-800'
               }`}
             >
-              <div className={`w-2 h-2 rounded-full ${hasValidOpenAIKey ? 'bg-emerald-600' : 'bg-amber-500 animate-pulse'}`} />
-              <span>
+              <div className={`w-2 h-2 rounded-full shrink-0 ${hasValidOpenAIKey ? 'bg-emerald-600' : 'bg-amber-500 animate-pulse'}`} />
+              <span className="truncate">
                 {config.openaiModel} ({config.openaiReasoningEffort})
               </span>
               {!hasValidOpenAIKey && (
-                <span className="text-[10px] text-amber-700 dark:text-amber-400 underline">
+                <span className="text-[10px] text-amber-700 dark:text-amber-400 underline shrink-0">
                   {translate("(Anahtar Girin)")}</span>
               )}
             </div>
@@ -1336,10 +1336,10 @@ export function App() {
             <div
               onClick={() => setIsSettingsOpen(true)}
               title={translate("Sağlayıcı veya modeli değiştirmek için tıklayın")}
-              className="hidden md:inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-sans font-medium bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 border border-stone-200 dark:border-stone-700 cursor-pointer hover:opacity-90 transition-all"
+              className="hidden md:inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-sans font-medium bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 border border-stone-200 dark:border-stone-700 cursor-pointer hover:opacity-90 transition-all max-w-[240px]"
             >
-              <div className="w-2 h-2 rounded-full bg-stone-400 dark:bg-stone-500" />
-              <span>{translate("Kanonik Mock (Çevrimdışı)")}</span>
+              <div className="w-2 h-2 rounded-full bg-stone-400 dark:bg-stone-500 shrink-0" />
+              <span className="truncate">{translate("Kanonik Mock (Çevrimdışı)")}</span>
             </div>
           )}
 
@@ -1450,7 +1450,7 @@ export function App() {
         />
 
         {/* Orta: Çözüm Alanı Kapsayıcısı */}
-        <div data-workspace-panel="solution" hidden={compactLayout && mobileView !== 'solution'} className="workspace-solution flex-1 relative flex flex-col min-w-0 min-h-0 h-full overflow-hidden bg-[#f4efe4] dark:bg-canvas">
+        <div data-workspace-panel="solution" hidden={compactLayout && mobileView !== 'solution'} className="workspace-solution flex-1 relative flex flex-col min-w-0 min-h-0 h-full overflow-hidden bg-[#eae3d4] dark:bg-[#0d0e12]">
           {/* Çoklu Soru Sekme Çubuğu */}
           <ProblemTabBar
             tabs={tabs}
@@ -1522,14 +1522,14 @@ export function App() {
             </div>
           )}
 
-          {/* Orta: Beyaz / Koyu Kağıt Dokümanı */}
+          {/* Orta: Beyaz / Koyu Gri Kağıt Dokümanı */}
           <main
             ref={mainScrollRef}
             onWheel={handleSolutionWheel}
-            className="solution-scroll flex-1 min-h-0 overflow-y-auto px-4 sm:px-8 py-4 flex justify-center"
+            className="solution-scroll flex-1 min-h-0 overflow-y-auto px-2.5 sm:px-5 lg:px-6 py-3 sm:py-4 flex justify-center"
           >
             {isLoading && !document ? (
-              <div className="flex flex-col items-center justify-center h-64 text-stone-500 dark:text-stone-400 font-serif italic text-sm">
+              <div className="spectrum-paper w-full max-w-[1440px] min-h-[calc(100vh-10rem)] mx-auto my-1 sm:my-2 rounded-xl bg-[#fdfcf7] dark:bg-paper border border-[#d8ccb4] dark:border-stone-700/90 shadow-[0_8px_30px_rgb(0,0,0,0.06)] flex flex-col items-center justify-center text-stone-500 dark:text-stone-300 font-serif italic text-sm p-8">
                 <RefreshCw className="w-6 h-6 animate-spin mb-3 text-amber-800 dark:text-amber-500" />
                 <span>
                   {isUsingGemini
@@ -1555,7 +1555,7 @@ export function App() {
                 isSolvingPath={Boolean(solvingPathId)}
               />
             ) : (
-              <div className="workspace-welcome max-w-xl w-full my-auto py-12 px-6 text-center animate-fade-in">
+              <div className="workspace-welcome w-full max-w-[1440px] min-h-[calc(100vh-10rem)] mx-auto my-1 sm:my-2 py-10 px-6 sm:px-10 lg:px-14 flex flex-col items-center justify-center text-center rounded-xl bg-[#fdfcf7] dark:bg-paper border border-[#d8ccb4] dark:border-stone-700/90 shadow-[0_8px_30px_rgb(0,0,0,0.06)] animate-fade-in">
                 <div className="spectrum-welcome-icon w-16 h-16 rounded-2xl bg-amber-100 dark:bg-amber-950/60 border border-amber-300 dark:border-amber-800 flex items-center justify-center mx-auto mb-5 shadow-xs">
                   <GraduationCap className="w-8 h-8 text-amber-800 dark:text-amber-400" />
                 </div>
@@ -1566,11 +1566,11 @@ export function App() {
                 <p className="spectrum-welcome-kicker text-xs uppercase tracking-widest font-sans font-semibold text-amber-800 dark:text-amber-400 mb-4">
                   {translate("Bilimsel Çözüm & Epistemik Derinleşme Motoru")}</p>
 
-                <p className="text-stone-600 dark:text-stone-300 text-sm font-serif leading-relaxed mb-6">
+                <p className="max-w-2xl mx-auto text-stone-600 dark:text-stone-300 text-sm font-serif leading-relaxed mb-6">
                   {translate("Üniversite ve ileri araştırma düzeyinde fizik ve matematik problemlerini adım adım, analitik türetimlerle çözer. Çözümdeki her denkleme tıklayarak ara adımlara, FBD diyagramlarına ve en temeldeki kurucu doğa yasalarına veya Öklid aksiyomlarına kadar inebilirsiniz.")}</p>
 
                 {/* Çok Modlu Problem Giriş Paneli (Metin/LaTeX, Görsel veya PDF) */}
-                <div className="bg-white dark:bg-panel border border-stone-200 dark:border-stone-800 rounded-xl p-5 shadow-xs text-left mb-4">
+                <div className="w-full max-w-3xl mx-auto bg-white dark:bg-panel border border-stone-200 dark:border-stone-700/90 rounded-xl p-5 shadow-xs text-left mb-4">
                   <ProblemInputTabs
                     onSubmit={handleSubmitNewProblem}
                     isLoading={isLoading}
@@ -1580,7 +1580,7 @@ export function App() {
                   />
                 </div>
 
-                <div className="text-[11px] text-stone-400 dark:text-stone-500 font-serif italic">
+                <div className="text-[11px] text-stone-400 dark:text-stone-400 font-serif italic">
                   {translate("Türetim dallanma ağacı, çözülen problemin denklemlerine tıklandıkça sağ panelde aşağı ve iki yana doğru açılarak görselleşecektir.")}</div>
               </div>
             )}

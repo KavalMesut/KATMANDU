@@ -45,22 +45,22 @@ html, body, #root {
 
 html.dark {
   color-scheme: dark;
-  --color-canvas: #000000;
-  --color-panel: #191919;
-  --color-paper: #101010;
-  --color-selected: #252525;
+  --color-canvas: #07080a;
+  --color-panel: #272a33;
+  --color-paper: #1f2128;
+  --color-selected: #303440;
   /* Neutral grays separate content and selection from the black workspace. */
-  --color-stone-950: #080808;
-  --color-stone-900: #111111;
-  --color-stone-800: #242424;
-  --color-stone-700: #353535;
-  --color-stone-600: #656565;
-  --color-stone-500: #8a8a8a;
-  --color-stone-400: #a5a5a5;
-  --color-stone-300: #c5c5c5;
-  --color-stone-200: #dddddd;
-  --color-stone-100: #ededed;
-  --color-stone-50: #f6f6f6;
+  --color-stone-950: #0b0c0f;
+  --color-stone-900: #14161b;
+  --color-stone-800: #2e313b;
+  --color-stone-700: #424654;
+  --color-stone-600: #6c7080;
+  --color-stone-500: #8f94a4;
+  --color-stone-400: #acb0be;
+  --color-stone-300: #cacdd8;
+  --color-stone-200: #e1e3eb;
+  --color-stone-100: #f0f1f5;
+  --color-stone-50: #f8f9fb;
   /* Existing accent utilities share a readable blue scale in dark mode. */
   --color-amber-50: #edf4ff;
   --color-amber-100: #dce9ff;
@@ -109,7 +109,8 @@ html.dark, html.dark body, html.dark #root {
 
   .dark .spectrum-tab-active::before,
   .dark .spectrum-dialog::before,
-  .dark .spectrum-paper::before {
+  .dark .spectrum-paper::before,
+  .dark .workspace-welcome::before {
     content: "";
     position: absolute;
     inset: 0 0 auto;
@@ -120,7 +121,21 @@ html.dark, html.dark body, html.dark #root {
   }
 
   .dark .spectrum-paper,
+  .dark .workspace-welcome,
   .dark .spectrum-dialog { position: relative; }
+
+  .dark .workspace-solution {
+    background-color: #0d0e12;
+  }
+
+  .dark .spectrum-paper,
+  .dark .workspace-welcome {
+    background-color: #20222a;
+    border-color: #383c4a;
+    box-shadow:
+      0 14px 40px rgba(0, 0, 0, 0.72),
+      0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+  }
 
   .dark .spectrum-welcome-icon {
     border-color: var(--color-spectrum-pink);
@@ -183,12 +198,30 @@ html.dark, html.dark body, html.dark #root {
   }
 }
 
-/* KaTeX font, satır kaydırma ve taşmayı önleme ayarları */
+/* KaTeX font, satır kaydırma ve üst üste binmeyi önleme ayarları */
 .katex {
   font-size: 1.05em;
+  line-height: 1.2;
   text-rendering: auto;
-  white-space: normal !important;
-  overflow-wrap: anywhere;
+  white-space: nowrap;
+  overflow-wrap: normal;
+}
+
+/* İç vlist/kesir/matris elemanlarında sıfır yükseklikli katmanların kırılıp üst üste binmesini engelle */
+.katex .base,
+.katex .vlist-t,
+.katex .vlist-r,
+.katex .vlist,
+.katex .mfrac,
+.katex .msupsub,
+.katex .mtable,
+.katex .delimsizing,
+.katex .accent,
+.katex .sqrt {
+  white-space: nowrap !important;
+  overflow-wrap: normal !important;
+  word-break: normal !important;
+  line-height: 1.2 !important;
 }
 
 .dark .katex {
@@ -196,10 +229,11 @@ html.dark, html.dark body, html.dark #root {
 }
 
 .katex-display {
-  margin: 0.4em 0 !important;
-  overflow-x: visible !important;
+  margin: 0.65em 0 !important;
+  padding: 0.35rem 0.2rem;
+  overflow-x: auto !important;
   overflow-y: visible !important;
-  white-space: normal !important;
+  max-width: 100%;
   text-align: center;
 }
 
@@ -208,6 +242,7 @@ html.dark, html.dark body, html.dark #root {
   white-space: normal !important;
   display: inline-block;
   max-width: 100%;
+  line-height: 1.2;
 }
 
 .katex-display > .katex > .katex-html {
@@ -216,9 +251,28 @@ html.dark, html.dark body, html.dark #root {
   flex-wrap: wrap;
   justify-content: center;
   align-items: baseline;
-  row-gap: 0.35rem;
+  row-gap: 0.75rem;
+  column-gap: 0.25rem;
   max-width: 100%;
-  overflow-wrap: anywhere;
+}
+
+.katex-display > .katex > .katex-html > .base {
+  display: inline-block;
+  white-space: nowrap !important;
+  line-height: 1.2 !important;
+  margin: 0.12em 0;
+}
+
+/* Paragraf içi formüllerin sadece en üst .base sınırlarından güvenle kırılmasına izin ver */
+.interactive-math-tag .katex > .katex-html {
+  white-space: normal;
+}
+
+.interactive-math-tag .katex > .katex-html > .base {
+  display: inline-block;
+  white-space: nowrap !important;
+  line-height: 1.2 !important;
+  margin: 0.08em 0;
 }
 
 /* İnteraktif formül ve sembol tıklama stili */
@@ -229,6 +283,14 @@ html.dark, html.dark body, html.dark #root {
   border-radius: 3px;
   padding: 0 2px;
   display: inline;
+  line-height: 1.5;
+}
+
+.interactive-math-tag.interactive-math-display {
+  display: block;
+  margin: 0.6rem 0;
+  padding: 0.25rem 0.4rem;
+  border-bottom: none;
 }
 
 .interactive-math-tag:hover {

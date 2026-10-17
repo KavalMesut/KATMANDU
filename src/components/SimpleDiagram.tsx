@@ -101,7 +101,7 @@ export function formatDiagramLabel(raw: unknown): string {
 
 /**
  * DiagramLabel:
- * SVG içinde gerçek matematik formüllerini KaTeX ile render eden şık etiket bileşeni.
+ * SVG içinde gerçek matematik formüllerini veya metin etiketlerini KaTeX ile render eden şık etiket bileşeni.
  */
 const DiagramLabel: React.FC<{
   label: string;
@@ -109,26 +109,56 @@ const DiagramLabel: React.FC<{
   y: number;
   color?: string;
   className?: string;
-}> = ({ label, x, y, color, className = '' }) => {
-  const content = label.startsWith('$') ? label : `$${label}$`;
+  withBackdrop?: boolean;
+}> = ({ label, x, y, color, className = '', withBackdrop = true }) => {
+  const trimmed = label.trim();
+  const hasExplicitMath = trimmed.includes('$') || trimmed.includes('\\(') || trimmed.includes('\\[');
+  const isMultiWordProse =
+    !hasExplicitMath &&
+    /\s/.test(trimmed) &&
+    !/[\\^_=<>]/.test(trimmed) &&
+    /[a-zA-ZçğıöşüÇĞİÖŞÜ]{3,}/.test(trimmed);
+
+  const content = hasExplicitMath || isMultiWordProse ? trimmed : `$${trimmed}$`;
 
   return (
     <foreignObject
-      x={x - 60}
-      y={y - 14}
-      width={120}
-      height={30}
+      x={x - 90}
+      y={y - 16}
+      width={180}
+      height={32}
       className="overflow-visible pointer-events-none"
     >
       <div
-        className={`flex items-center justify-center text-[12px] font-serif leading-none select-none ${className}`}
+        className={`flex items-center justify-center text-[12px] font-serif leading-tight whitespace-nowrap select-none ${className}`}
         style={color ? { color } : undefined}
       >
-        <KaTeXRenderer content={content} />
+        <span
+          className={
+            withBackdrop
+              ? 'px-1.5 py-0.5 rounded bg-[#fdfcf7]/88 dark:bg-[#20222a]/88 shadow-[0_1px_2px_rgba(0,0,0,0.08)]'
+              : ''
+          }
+        >
+          <KaTeXRenderer content={content} />
+        </span>
       </div>
     </foreignObject>
   );
 };
+
+function getPerpendicularNormal(x1: number, y1: number, x2: number, y2: number): [number, number] {
+  const dx = x2 - x1;
+  const dy = y2 - y1;
+  const len = Math.sqrt(dx * dx + dy * dy) || 1;
+  const nx = -dy / len;
+  const ny = dx / len;
+  // Etiketin her zaman üstte veya sağda durmasını tercih et
+  if (ny < -0.15 || (Math.abs(ny) <= 0.15 && nx >= 0)) {
+    return [nx, ny];
+  }
+  return [-nx, -ny];
+}
 
 /**
  * SimpleDiagram:
@@ -155,6 +185,60 @@ export const SimpleDiagram: React.FC<SimpleDiagramProps> = ({ spec, className = 
   const width = Number(spec.width) || 360;
   const height = Number(spec.height) || 240;
   const caption = typeof spec.caption === 'string' ? spec.caption : undefined;
+
+  // Etiketlerin birbirinin veya kütlelerin üstüne binmesini önleyen çarpışma çözücü
+  const placedBoxes: Array<{ x: number; y: number; w: number; h: number }> = [];
+  for (const el of elements) {
+    if (!el || typeof el !== 'object') continue;
+    if (el.type === 'mass') {
+      const mx = Number(el.x);
+      const my = Number(el.y);
+      const mSize = Number(el.size) || 16;
+      if (Number.isFinite(mx) && Number.isFinite(my)) {
+        placedBoxes.push({ x: mx, y: my, w: mSize * 2 + 8, h: mSize * 2 + 8 });
+      }
+    } else if (el.type === 'source') {
+      const p = toCoords(el.center);
+      if (p) {
+        placedBoxes.push({ x: p[0], y: p[1], w: 38, h: 38 });
+      }
+    }
+  }
+
+  const resolveLabelPosition = (rawX: number, rawY: number, labelText: string): [number, number] => {
+    const cleanLen = formatDiagramLabel(labelText).length || 3;
+    const w = Math.min(140, Math.max(28, cleanLen * 7.5 + 14));
+    const h = 20;
+
+    const candidates: Array<[number, number]> = [
+      [0, 0],
+      [0, -18],
+      [0, 18],
+      [18, -14],
+      [-18, -14],
+      [18, 14],
+      [-18, 14],
+      [28, 0],
+      [-28, 0],
+      [0, -34],
+      [0, 34]
+    ];
+
+    for (const [ox, oy] of candidates) {
+      const cx = Math.max(24, Math.min(width - 24, rawX + ox));
+      const cy = Math.max(14, Math.min(height - 14, rawY + oy));
+      const collides = placedBoxes.some(
+        (b) => Math.abs(cx - b.x) < (w + b.w) / 2 && Math.abs(cy - b.y) < (h + b.h) / 2
+      );
+      if (!collides) {
+        placedBoxes.push({ x: cx, y: cy, w, h });
+        return [cx, cy];
+      }
+    }
+
+    placedBoxes.push({ x: rawX, y: rawY, w, h });
+    return [rawX, rawY];
+  };
 
   const renderElement = (el: DiagramElement, index: number): React.ReactNode => {
     if (!el || typeof el !== 'object') return null;
@@ -188,22 +272,29 @@ export const SimpleDiagram: React.FC<SimpleDiagramProps> = ({ spec, className = 
           }
           d += `L ${len - lead} 0 L ${len} 0`;
 
+          const [nx, ny] = getPerpendicularNormal(x1, y1, x2, y2);
+          const [lx, ly] = el.label
+            ? resolveLabelPosition((x1 + x2) / 2 + nx * 20, (y1 + y2) / 2 + ny * 20, el.label)
+            : [0, 0];
+
           return (
-            <g key={`res-${index}`} transform={`translate(${x1}, ${y1}) rotate(${angle})`}>
-              <path
-                d={d}
-                fill="none"
-                stroke={color}
-                strokeWidth="2.25"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                filter="url(#component-shadow)"
-              />
+            <g key={`res-${index}`}>
+              <g transform={`translate(${x1}, ${y1}) rotate(${angle})`}>
+                <path
+                  d={d}
+                  fill="none"
+                  stroke={color}
+                  strokeWidth="2.25"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  filter="url(#component-shadow)"
+                />
+              </g>
               {el.label && (
                 <DiagramLabel
                   label={el.label}
-                  x={len / 2}
-                  y={-18}
+                  x={lx}
+                  y={ly}
                   color={color}
                   className="font-bold text-amber-800 dark:text-amber-300"
                 />
@@ -218,35 +309,38 @@ export const SimpleDiagram: React.FC<SimpleDiagramProps> = ({ spec, className = 
           const [cx, cy] = p;
           const color = el.color || '#2563eb';
           const isAc = el.kind === 'ac';
+          const [lx, ly] = el.label ? resolveLabelPosition(cx, cy - 28, el.label) : [cx, cy - 28];
 
           return (
-            <g key={`src-${index}`} transform={`translate(${cx}, ${cy})`}>
-              <circle
-                cx={0}
-                cy={0}
-                r={18}
-                fill="url(#source-gradient)"
-                stroke={color}
-                strokeWidth="2"
-                filter="url(#component-shadow)"
-              />
-              {isAc ? (
-                <path d="M -8 0 Q -4 -8 0 0 T 8 0" fill="none" stroke={color} strokeWidth="2" />
-              ) : (
-                <>
-                  <text x={0} y={-4} textAnchor="middle" fontSize="13" fontWeight="bold" fill={color}>
-                    +
-                  </text>
-                  <text x={0} y={12} textAnchor="middle" fontSize="15" fontWeight="bold" fill={color}>
-                    −
-                  </text>
-                </>
-              )}
+            <g key={`src-${index}`}>
+              <g transform={`translate(${cx}, ${cy})`}>
+                <circle
+                  cx={0}
+                  cy={0}
+                  r={18}
+                  fill="url(#source-gradient)"
+                  stroke={color}
+                  strokeWidth="2"
+                  filter="url(#component-shadow)"
+                />
+                {isAc ? (
+                  <path d="M -8 0 Q -4 -8 0 0 T 8 0" fill="none" stroke={color} strokeWidth="2" />
+                ) : (
+                  <>
+                    <text x={0} y={-4} textAnchor="middle" fontSize="13" fontWeight="bold" fill={color}>
+                      +
+                    </text>
+                    <text x={0} y={12} textAnchor="middle" fontSize="15" fontWeight="bold" fill={color}>
+                      −
+                    </text>
+                  </>
+                )}
+              </g>
               {el.label && (
                 <DiagramLabel
                   label={el.label}
-                  x={0}
-                  y={-28}
+                  x={lx}
+                  y={ly}
                   color={color}
                   className="font-bold text-blue-800 dark:text-blue-300"
                 />
@@ -289,18 +383,24 @@ export const SimpleDiagram: React.FC<SimpleDiagramProps> = ({ spec, className = 
           const gap = 8;
           const mid = len / 2;
           const plateH = 16;
+          const [nx, ny] = getPerpendicularNormal(x1, y1, x2, y2);
+          const [lx, ly] = el.label
+            ? resolveLabelPosition((x1 + x2) / 2 + nx * (plateH + 12), (y1 + y2) / 2 + ny * (plateH + 12), el.label)
+            : [0, 0];
 
           return (
-            <g key={`cap-${index}`} transform={`translate(${x1}, ${y1}) rotate(${angle})`}>
-              <line x1={0} y1={0} x2={mid - gap / 2} y2={0} stroke={color} strokeWidth="2" />
-              <line x1={mid - gap / 2} y1={-plateH} x2={mid - gap / 2} y2={plateH} stroke={color} strokeWidth="2.5" />
-              <line x1={mid + gap / 2} y1={-plateH} x2={mid + gap / 2} y2={plateH} stroke={color} strokeWidth="2.5" />
-              <line x1={mid + gap / 2} y1={0} x2={len} y2={0} stroke={color} strokeWidth="2" />
+            <g key={`cap-${index}`}>
+              <g transform={`translate(${x1}, ${y1}) rotate(${angle})`}>
+                <line x1={0} y1={0} x2={mid - gap / 2} y2={0} stroke={color} strokeWidth="2" />
+                <line x1={mid - gap / 2} y1={-plateH} x2={mid - gap / 2} y2={plateH} stroke={color} strokeWidth="2.5" />
+                <line x1={mid + gap / 2} y1={-plateH} x2={mid + gap / 2} y2={plateH} stroke={color} strokeWidth="2.5" />
+                <line x1={mid + gap / 2} y1={0} x2={len} y2={0} stroke={color} strokeWidth="2" />
+              </g>
               {el.label && (
                 <DiagramLabel
                   label={el.label}
-                  x={mid}
-                  y={-plateH - 10}
+                  x={lx}
+                  y={ly}
                   color={color}
                   className="font-bold text-sky-800 dark:text-sky-300"
                 />
@@ -336,14 +436,21 @@ export const SimpleDiagram: React.FC<SimpleDiagramProps> = ({ spec, className = 
           }
           d += `L ${len - lead} 0 L ${len} 0`;
 
+          const [nx, ny] = getPerpendicularNormal(x1, y1, x2, y2);
+          const [lx, ly] = el.label
+            ? resolveLabelPosition((x1 + x2) / 2 + nx * 20, (y1 + y2) / 2 + ny * 20, el.label)
+            : [0, 0];
+
           return (
-            <g key={`spring-${index}`} transform={`translate(${x1}, ${y1}) rotate(${angle})`}>
-              <path d={d} fill="none" stroke={color} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+            <g key={`spring-${index}`}>
+              <g transform={`translate(${x1}, ${y1}) rotate(${angle})`}>
+                <path d={d} fill="none" stroke={color} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+              </g>
               {el.label && (
                 <DiagramLabel
                   label={el.label}
-                  x={len / 2}
-                  y={-18}
+                  x={lx}
+                  y={ly}
                   color={color}
                   className="font-bold text-orange-800 dark:text-orange-300"
                 />
@@ -358,13 +465,16 @@ export const SimpleDiagram: React.FC<SimpleDiagramProps> = ({ spec, className = 
           const [cx, cy] = p;
           const r = Number(el.radius) || 20;
           const color = el.color || '#64748b';
+          const [lx, ly] = el.label ? resolveLabelPosition(cx, cy + r + 14, el.label) : [cx, cy + r + 14];
 
           return (
-            <g key={`pulley-${index}`} transform={`translate(${cx}, ${cy})`}>
-              <circle cx={0} cy={0} r={r} fill="#e2e8f0" stroke={color} strokeWidth="2.5" className="fill-stone-200 dark:fill-stone-700" />
-              <circle cx={0} cy={0} r={r - 4} fill="none" stroke={color} strokeWidth="1" strokeDasharray="3,3" />
-              <circle cx={0} cy={0} r={4} fill="#0f172a" className="fill-stone-900 dark:fill-stone-100" />
-              {el.label && <DiagramLabel label={el.label} x={0} y={r + 14} className="text-stone-600 dark:text-stone-400" />}
+            <g key={`pulley-${index}`}>
+              <g transform={`translate(${cx}, ${cy})`}>
+                <circle cx={0} cy={0} r={r} fill="#e2e8f0" stroke={color} strokeWidth="2.5" className="fill-stone-200 dark:fill-stone-700" />
+                <circle cx={0} cy={0} r={r - 4} fill="none" stroke={color} strokeWidth="1" strokeDasharray="3,3" />
+                <circle cx={0} cy={0} r={4} fill="#0f172a" className="fill-stone-900 dark:fill-stone-100" />
+              </g>
+              {el.label && <DiagramLabel label={el.label} x={lx} y={ly} className="text-stone-600 dark:text-stone-400" />}
             </g>
           );
         }
@@ -430,6 +540,10 @@ export const SimpleDiagram: React.FC<SimpleDiagramProps> = ({ spec, className = 
           const strokeColor = typeof el.color === 'string' ? el.color : undefined;
           const midX = (x1 + x2) / 2;
           const midY = (y1 + y2) / 2;
+          const [nx, ny] = getPerpendicularNormal(x1, y1, x2, y2);
+          const [lx, ly] = el.label
+            ? resolveLabelPosition(midX + nx * 15, midY + ny * 15, el.label)
+            : [midX, midY];
 
           return (
             <g key={`line-${index}`}>
@@ -452,8 +566,8 @@ export const SimpleDiagram: React.FC<SimpleDiagramProps> = ({ spec, className = 
               {el.label && (
                 <DiagramLabel
                   label={el.label}
-                  x={midX + 12}
-                  y={midY}
+                  x={lx}
+                  y={ly}
                   color={strokeColor}
                   className="font-serif italic text-stone-900 dark:text-stone-200"
                 />
@@ -468,6 +582,8 @@ export const SimpleDiagram: React.FC<SimpleDiagramProps> = ({ spec, className = 
           const [ox, oy] = pOrigin;
           const xLen = Number(el.xLength) || 150;
           const yLen = Number(el.yLength) || 100;
+          const [xlx, xly] = el.xLabel ? resolveLabelPosition(ox + xLen + 14, oy + 2, el.xLabel) : [0, 0];
+          const [ylx, yly] = el.yLabel ? resolveLabelPosition(ox, oy - yLen - 14, el.yLabel) : [0, 0];
 
           return (
             <g key={`axis-${index}`}>
@@ -484,8 +600,8 @@ export const SimpleDiagram: React.FC<SimpleDiagramProps> = ({ spec, className = 
               {el.xLabel && (
                 <DiagramLabel
                   label={el.xLabel}
-                  x={ox + xLen + 14}
-                  y={oy + 2}
+                  x={xlx}
+                  y={xly}
                   className="text-stone-700 dark:text-stone-300 font-serif italic"
                 />
               )}
@@ -502,8 +618,8 @@ export const SimpleDiagram: React.FC<SimpleDiagramProps> = ({ spec, className = 
               {el.yLabel && (
                 <DiagramLabel
                   label={el.yLabel}
-                  x={ox}
-                  y={oy - yLen - 14}
+                  x={ylx}
+                  y={yly}
                   className="text-stone-700 dark:text-stone-300 font-serif italic"
                 />
               )}
@@ -535,7 +651,8 @@ export const SimpleDiagram: React.FC<SimpleDiagramProps> = ({ spec, className = 
                   label={label}
                   x={x}
                   y={y}
-                  className="font-bold text-stone-950 dark:text-stone-100"
+                  withBackdrop={false}
+                  className="font-bold text-stone-950 dark:text-stone-950"
                 />
               </g>
             );
@@ -558,7 +675,8 @@ export const SimpleDiagram: React.FC<SimpleDiagramProps> = ({ spec, className = 
                   label={label}
                   x={x}
                   y={y}
-                  className="font-bold text-stone-950 dark:text-stone-100"
+                  withBackdrop={false}
+                  className="font-bold text-stone-950 dark:text-stone-950"
                 />
               </g>
             );
@@ -572,8 +690,17 @@ export const SimpleDiagram: React.FC<SimpleDiagramProps> = ({ spec, className = 
 
           const [x1, y1] = p1;
           const [x2, y2] = p2;
+          const dx = x2 - x1;
+          const dy = y2 - y1;
+          const len = Math.sqrt(dx * dx + dy * dy) || 1;
+          const ux = dx / len;
+          const uy = dy / len;
+          const [nx, ny] = getPerpendicularNormal(x1, y1, x2, y2);
           const color = typeof el.color === 'string' ? el.color : '#2563eb';
           const safeColorId = color.replace(/[^a-zA-Z0-9]/g, '');
+          const [lx, ly] = el.label
+            ? resolveLabelPosition(x2 + ux * 12 + nx * 10, y2 + uy * 10 + ny * 10, el.label)
+            : [x2, y2];
 
           return (
             <g key={`vec-${index}`}>
@@ -590,8 +717,8 @@ export const SimpleDiagram: React.FC<SimpleDiagramProps> = ({ spec, className = 
               {el.label && (
                 <DiagramLabel
                   label={el.label}
-                  x={x2 + 14}
-                  y={y2}
+                  x={lx}
+                  y={ly}
                   color={color}
                   className="font-bold drop-shadow-xs"
                 />
@@ -617,8 +744,9 @@ export const SimpleDiagram: React.FC<SimpleDiagramProps> = ({ spec, className = 
           const ay2 = cy + r * Math.sin(rad2);
 
           const midAngle = (rad1 + rad2) / 2;
-          const textX = cx + (r + 14) * Math.cos(midAngle);
-          const textY = cy + (r + 14) * Math.sin(midAngle);
+          const rawTextX = cx + (r + 16) * Math.cos(midAngle);
+          const rawTextY = cy + (r + 16) * Math.sin(midAngle);
+          const [textX, textY] = el.label ? resolveLabelPosition(rawTextX, rawTextY, el.label) : [rawTextX, rawTextY];
 
           return (
             <g key={`angle-${index}`}>
@@ -650,11 +778,12 @@ export const SimpleDiagram: React.FC<SimpleDiagramProps> = ({ spec, className = 
           const x = Number(el.x);
           const y = Number(el.y);
           if (!Number.isFinite(x) || !Number.isFinite(y)) return null;
+          const [lx, ly] = el.label ? resolveLabelPosition(x + 14, y - 10, el.label) : [x + 14, y - 10];
 
           return (
             <g key={`point-${index}`}>
               <circle cx={x} cy={y} r="3.5" fill="#1c1917" className="fill-stone-900 dark:fill-stone-100" />
-              {el.label && <DiagramLabel label={el.label} x={x + 12} y={y - 8} className="text-stone-700 dark:text-stone-300" />}
+              {el.label && <DiagramLabel label={el.label} x={lx} y={ly} className="text-stone-700 dark:text-stone-300" />}
             </g>
           );
         }
@@ -681,6 +810,7 @@ export const SimpleDiagram: React.FC<SimpleDiagramProps> = ({ spec, className = 
           }
           centroidX /= validCoords.length;
           centroidY /= validCoords.length;
+          const [lx, ly] = el.label ? resolveLabelPosition(centroidX, centroidY, el.label) : [centroidX, centroidY];
 
           return (
             <g key={`polygon-${index}`}>
@@ -695,8 +825,8 @@ export const SimpleDiagram: React.FC<SimpleDiagramProps> = ({ spec, className = 
               {el.label && (
                 <DiagramLabel
                   label={el.label}
-                  x={centroidX}
-                  y={centroidY}
+                  x={lx}
+                  y={ly}
                   color={stroke}
                   className="font-semibold"
                 />
@@ -760,6 +890,9 @@ export const SimpleDiagram: React.FC<SimpleDiagramProps> = ({ spec, className = 
           // Etiket konumu (eğrinin ortası veya zirvesi)
           const midIdx = Math.floor(validPoints.length / 2);
           const labelPoint = validPoints[midIdx];
+          const [lx, ly] = el.label
+            ? resolveLabelPosition(labelPoint[0], labelPoint[1] - 16, el.label)
+            : [labelPoint[0], labelPoint[1] - 16];
 
           return (
             <g key={`curve-${index}`}>
@@ -783,8 +916,8 @@ export const SimpleDiagram: React.FC<SimpleDiagramProps> = ({ spec, className = 
               {el.label && (
                 <DiagramLabel
                   label={el.label}
-                  x={labelPoint[0]}
-                  y={labelPoint[1] - 14}
+                  x={lx}
+                  y={ly}
                   color={stroke}
                   className="font-bold drop-shadow-xs"
                 />
@@ -801,6 +934,8 @@ export const SimpleDiagram: React.FC<SimpleDiagramProps> = ({ spec, className = 
       return null;
     }
   };
+
+  const renderedElements = elements.map((el, idx) => renderElement(el, idx));
 
   const vectorColors = Array.from(
     new Set([
@@ -945,7 +1080,7 @@ export const SimpleDiagram: React.FC<SimpleDiagramProps> = ({ spec, className = 
           <rect width={width} height={height} fill="url(#academic-grid)" />
 
           {/* Elemanlar */}
-          {elements.map((el, idx) => renderElement(el, idx))}
+          {renderedElements}
         </svg>
       </div>
     </div>
@@ -995,7 +1130,7 @@ export const SimpleDiagram: React.FC<SimpleDiagramProps> = ({ spec, className = 
                 className="overflow-visible"
               >
                 <rect width={width} height={height} fill="url(#academic-grid)" />
-                {elements.map((el, idx) => renderElement(el, idx))}
+                {renderedElements}
               </svg>
             </div>
 

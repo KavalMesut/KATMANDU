@@ -346,7 +346,7 @@ export const MindMapModal: React.FC<MindMapModalProps> = ({
                   onSelectNode(pos.node.id);
                   onClose();
                 }}
-                className={`absolute rounded-xl p-2.5 cursor-pointer transition-all duration-200 border text-left shadow-lg animate-node-enter ${
+                className={`absolute rounded-xl p-2.5 cursor-pointer transition-all duration-200 border text-left shadow-lg overflow-hidden animate-node-enter ${
                   isActive
                     ? 'bg-amber-950/80 border-amber-500 text-amber-100 ring-2 ring-amber-500/60 shadow-amber-500/20 animate-radar-pulse'
                     : isAxiomatic
@@ -375,9 +375,16 @@ export const MindMapModal: React.FC<MindMapModalProps> = ({
                       <FileText className="w-3.5 h-3.5 text-stone-400 shrink-0" />
                     )}
 
-                    <span className="text-[10px] font-mono text-stone-400 font-medium">
+                    <span className="text-[10px] font-mono text-stone-400 font-medium shrink-0">
                       D{pos.node.depth}
                     </span>
+
+                    {isActive && (
+                      <span className="inline-flex items-center gap-1 text-[8px] uppercase font-sans font-semibold text-amber-300 shrink-0">
+                        <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
+                        <span>{translate("Aktif")}</span>
+                      </span>
+                    )}
                   </div>
 
                   {isAxiomatic ? (
@@ -392,18 +399,9 @@ export const MindMapModal: React.FC<MindMapModalProps> = ({
                 </div>
 
                 {/* Başlık Metni */}
-                <div className="text-xs font-serif font-medium leading-snug line-clamp-2">
+                <div className="text-xs font-serif font-medium leading-snug line-clamp-2 break-words">
                   {translate(pos.node.label)}
                 </div>
-
-                {/* Alt Vurgu Durumu */}
-                {isActive && (
-                  <div className="absolute bottom-1 right-2 flex items-center gap-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
-                    <span className="text-[9px] uppercase font-sans font-semibold text-amber-300">
-                      {translate("Aktif")}</span>
-                  </div>
-                )}
               </div>
             );
           })}
